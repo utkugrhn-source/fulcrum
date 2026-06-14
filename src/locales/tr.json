@@ -1,0 +1,74 @@
+{
+  "app": {
+    "title": "Fulcrum",
+    "tagline": "Günlük ortopedi literatürü, sıralanmış.",
+    "subtitle": "EM Pulse esinli, PubMed ortopedi makalelerini dergi katmanı, çalışma tipi ve güncellik üzerinden sıralayan günlük özet."
+  },
+  "nav": {
+    "home": "Bugün",
+    "about": "Hakkında",
+    "scoring": "Skor"
+  },
+  "filters": {
+    "all_subspecialties": "Tüm yan dallar",
+    "subspecialty": "Yan dal",
+    "tier": "Dergi katmanı",
+    "date": "Tarih",
+    "since_24h": "Son 24 saat",
+    "since_7d": "Son 7 gün",
+    "since_30d": "Son 30 gün",
+    "all_time": "Tümü",
+    "search_placeholder": "Başlıkta ara…",
+    "clear": "Filtreleri temizle",
+    "tier_t1": "T1 — En üst",
+    "tier_t2": "T2 — Güçlü",
+    "tier_t3": "T3 — Açık erişim / genel"
+  },
+  "card": {
+    "score": "Skor",
+    "open_pubmed": "PubMed",
+    "open_doi": "DOI",
+    "no_abstract": "Özet mevcut değil."
+  },
+  "detail": {
+    "back": "Bugüne dön",
+    "abstract": "Özet",
+    "authors": "Yazarlar",
+    "journal": "Dergi",
+    "published": "Yayım tarihi",
+    "indexed": "PubMed'e eklenme",
+    "mesh": "MeSH başlıkları",
+    "keywords": "Yazar anahtar kelimeleri",
+    "scoring_breakdown": "Skor dökümü",
+    "tier_label": "Dergi katmanı",
+    "type_weight": "Makale tipi ağırlığı",
+    "recency_weight": "Güncellik ağırlığı",
+    "final_score": "Toplam skor"
+  },
+  "state": {
+    "loading": "Günün makaleleri yükleniyor…",
+    "empty_title": "Bugün eşleşen makale yok",
+    "empty_body": "Tarih aralığını genişletin veya filtreleri temizleyin.",
+    "supabase_missing_title": "Supabase yapılandırılmamış",
+    "supabase_missing_body": "VITE_SUPABASE_URL ve VITE_SUPABASE_ANON_KEY değişkenlerini ortama ekleyip yeniden deploy edin."
+  },
+  "subspecialties": {
+    "trauma": "Travma",
+    "sports": "Spor Hekimliği",
+    "arthroplasty": "Artroplasti",
+    "spine": "Omurga",
+    "pediatric": "Pediatrik",
+    "hand-upper": "El ve Üst Ekstremite",
+    "foot-ankle": "Ayak ve Ayak Bileği",
+    "shoulder-elbow": "Omuz ve Dirsek",
+    "onc": "Onkoloji",
+    "basic": "Temel Bilim",
+    "general": "Genel"
+  },
+  "footer": {
+    "built_by": "Geliştiren",
+    "inspired_by": "Esin kaynağı",
+    "data_source": "Veri kaynağı: PubMed E-utilities.",
+    "github": "Kaynak kod GitHub'da"
+  }
+}

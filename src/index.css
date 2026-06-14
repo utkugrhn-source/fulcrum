@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg:        252 252 250;
+    --bg-subtle: 245 244 240;
+    --bg-card:   255 255 255;
+    --fg:         18  20  24;
+    --fg-muted:   85  90 100;
+    --fg-subtle: 130 135 145;
+    --accent:     19  78 156;
+    --accent-hover: 13  60 122;
+    --border:    228 228 222;
+
+    --tier-1:    19  78 156;   /* deep blue */
+    --tier-2:   105 130  60;   /* sage      */
+    --tier-3:   140 110  60;   /* amber     */
+
+    color-scheme: light;
+  }
+
+  .dark {
+    --bg:         12  14  18;
+    --bg-subtle:  18  20  26;
+    --bg-card:    22  25  32;
+    --fg:        232 232 230;
+    --fg-muted:  175 180 188;
+    --fg-subtle: 130 135 145;
+    --accent:   122 168 240;
+    --accent-hover: 148 188 248;
+    --border:    40  44  54;
+
+    --tier-1:   122 168 240;
+    --tier-2:   180 200 130;
+    --tier-3:   220 180 100;
+
+    color-scheme: dark;
+  }
+
+  html, body, #root { height: 100%; }
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@layer components {
+  .container-prose { max-width: 64rem; @apply mx-auto px-4 sm:px-6; }
+  .card {
+    @apply bg-bg-card border border-border rounded-xl shadow-sm;
+    @apply transition-shadow duration-150 hover:shadow-md;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full;
+    @apply border border-border text-fg-muted bg-bg-subtle;
+  }
+  .pill-active {
+    @apply bg-accent text-white border-accent;
+  }
+}
