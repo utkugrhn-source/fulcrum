@@ -1,4 +1,3 @@
-import { Search } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface Props {
@@ -9,15 +8,12 @@ interface Props {
 export function SearchBar({ value, onChange }: Props) {
   const { t } = useTranslation();
   return (
-    <div className="relative">
-      <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle" />
-      <input
-        type="search"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={t("filters.search_placeholder")}
-        className="w-full sm:w-72 pl-9 pr-3 py-2 text-sm rounded-lg border border-border bg-bg-subtle focus:bg-bg-card focus:border-accent/40 focus:outline-none focus:ring-2 focus:ring-accent/20 transition-all"
-      />
-    </div>
+    <input
+      type="search"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={t("filters.search_placeholder")}
+      className="w-full sm:flex-1 sm:min-w-[220px] px-3 py-1.5 body-serif italic text-[13px] border border-brass bg-transparent text-navy dark:text-cream placeholder:text-ink-2 dark:placeholder:text-cream/50 rounded-sm focus:outline-none focus:border-blood transition-colors"
+    />
   );
 }

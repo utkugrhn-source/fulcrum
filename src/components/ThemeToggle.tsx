@@ -8,10 +8,10 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="inline-flex items-center justify-center rounded-full border border-border bg-bg-subtle p-1.5 text-fg-muted hover:text-fg hover:bg-bg-card transition-colors"
+      className="inline-flex items-center justify-center w-7 h-7 rounded-full border border-brass text-navy dark:text-cream hover:bg-brass/15 transition-colors"
       aria-label={theme === "dark" ? "Switch to light" : "Switch to dark"}
     >
-      <Icon size={16} strokeWidth={1.75} />
+      <Icon size={14} strokeWidth={1.75} />
     </button>
   );
 }

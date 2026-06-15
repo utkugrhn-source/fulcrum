@@ -4,59 +4,105 @@
 
 @layer base {
   :root {
-    --bg:        252 252 250;
-    --bg-subtle: 245 244 240;
-    --bg-card:   255 255 255;
-    --fg:         18  20  24;
-    --fg-muted:   85  90 100;
-    --fg-subtle: 130 135 145;
-    --accent:     19  78 156;
-    --accent-hover: 13  60 122;
-    --border:    228 228 222;
+    /* Varsity Codex — light (cream) */
+    --bg:        244 236 219;   /* cream  #F4ECDB */
+    --bg-subtle: 235 225 199;   /* cream-2 #EBE1C7 */
+    --bg-card:    15  37  64;   /* navy   #0F2540  (cards are dark on cream) */
+    --fg:         15  37  64;   /* navy */
+    --fg-muted:   74  62  42;   /* ink */
+    --fg-subtle:  90  74  42;   /* ink-2 */
+    --accent:    158  42  43;   /* blood */
+    --accent-hover: 130 30 30;
+    --border:    184 153 104;   /* brass */
 
-    --tier-1:    19  78 156;   /* deep blue */
-    --tier-2:   105 130  60;   /* sage      */
-    --tier-3:   140 110  60;   /* amber     */
+    --tier-1:    184 153 104;
+    --tier-2:    184 153 104;
+    --tier-3:     90  74  42;
 
     color-scheme: light;
   }
 
   .dark {
-    --bg:         12  14  18;
-    --bg-subtle:  18  20  26;
-    --bg-card:    22  25  32;
-    --fg:        232 232 230;
-    --fg-muted:  175 180 188;
-    --fg-subtle: 130 135 145;
-    --accent:   122 168 240;
-    --accent-hover: 148 188 248;
-    --border:    40  44  54;
+    /* Varsity Codex — dark (navy) */
+    --bg:         15  37  64;   /* navy */
+    --bg-subtle:  16  43  74;   /* navy-2 */
+    --bg-card:    16  43  74;
+    --fg:        244 236 219;   /* cream */
+    --fg-muted:  197 189 160;   /* leaf */
+    --fg-subtle: 184 153 104;   /* brass */
+    --accent:    184 153 104;   /* brass */
+    --accent-hover: 197 168 122;
+    --border:    184 153 104;
 
-    --tier-1:   122 168 240;
-    --tier-2:   180 200 130;
-    --tier-3:   220 180 100;
+    --tier-1:    184 153 104;
+    --tier-2:    184 153 104;
+    --tier-3:    197 189 160;
 
     color-scheme: dark;
   }
 
   html, body, #root { height: 100%; }
   body {
-    @apply bg-bg text-fg font-sans antialiased;
+    @apply bg-cream text-navy antialiased;
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
     text-rendering: optimizeLegibility;
+  }
+  .dark body {
+    @apply bg-navy text-cream;
   }
 }
 
 @layer components {
-  .container-prose { max-width: 64rem; @apply mx-auto px-4 sm:px-6; }
-  .card {
-    @apply bg-bg-card border border-border rounded-xl shadow-sm;
-    @apply transition-shadow duration-150 hover:shadow-md;
+  .container-prose { max-width: 64rem; @apply mx-auto px-5 sm:px-7; }
+
+  /* Editorial micro-meta (folio numbers, eyebrows, footer chrome) */
+  .editorial {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
   }
+
+  /* Display headline (italic Noto Serif Display) */
+  .display {
+    font-family: 'Noto Serif Display', 'Source Serif Pro', Georgia, serif;
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  /* Body editorial text */
+  .body-serif {
+    font-family: 'Source Serif Pro', Georgia, serif;
+  }
+
+  /* Pills */
   .pill {
-    @apply inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full;
-    @apply border border-border text-fg-muted bg-bg-subtle;
+    @apply inline-flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-sm;
+    @apply border border-brass text-navy bg-transparent;
+    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
+    user-select: none;
+    letter-spacing: 0.01em;
   }
+  .dark .pill {
+    @apply text-cream border-brass;
+  }
+  .pill:hover { @apply bg-brass/10; }
   .pill-active {
-    @apply bg-accent text-white border-accent;
+    @apply bg-navy text-cream border-navy;
+  }
+  .dark .pill-active {
+    @apply bg-brass text-navy border-brass;
+  }
+
+  .pill-tier {
+    font-family: 'Source Serif Pro', Georgia, serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 13px;
+    @apply px-3 py-0.5;
+  }
+  .pill-tier-active {
+    @apply bg-blood text-cream border-blood;
   }
 }

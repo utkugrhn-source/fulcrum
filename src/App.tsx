@@ -7,21 +7,19 @@ import { ArticleDetail } from "./pages/ArticleDetail";
 function Footer() {
   const { t } = useTranslation();
   return (
-    <footer className="border-t border-border mt-12 py-8">
-      <div className="container-prose text-xs text-fg-subtle flex flex-wrap items-center justify-between gap-2">
-        <div>
-          {t("footer.built_by")}{" "}
-          <a href="https://cyprusorthopaedics.com" target="_blank" rel="noopener noreferrer"
-             className="hover:text-fg transition-colors">utkugrhn</a>
-          {" · "}
-          {t("footer.inspired_by")}{" "}
-          <a href="https://derinsoluk.com/pulse" target="_blank" rel="noopener noreferrer"
-             className="hover:text-fg transition-colors">EM Pulse</a>
-          {" · "}
-          <a href="https://github.com/utkugrhn-source/fulcrum" target="_blank" rel="noopener noreferrer"
-             className="hover:text-fg transition-colors">{t("footer.github")}</a>
-        </div>
-        <div>{t("footer.data_source")}</div>
+    <footer className="border-t border-brass mt-10 bg-cream-2 dark:bg-navy-2">
+      <div className="container-prose py-4 editorial text-[10.5px] tracking-[0.15em] text-ink dark:text-leaf flex flex-wrap items-center justify-between gap-2">
+        <span>{t("footer.signature")}</span>
+        <span>{t("footer.edition")}</span>
+        <a
+          href="https://github.com/utkugrhn-source/fulcrum"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-blood transition-colors"
+        >
+          {t("footer.github")}
+        </a>
+        <span>{t("footer.data_source")}</span>
       </div>
     </footer>
   );
@@ -29,7 +27,7 @@ function Footer() {
 
 export default function App() {
   return (
-    <div className="min-h-full flex flex-col">
+    <div className="min-h-full flex flex-col bg-cream dark:bg-navy">
       <Header />
       <main className="flex-1">
         <Routes>

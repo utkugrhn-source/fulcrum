@@ -5,13 +5,15 @@ export function LanguageToggle() {
   const { i18n } = useTranslation();
   const lang = i18n.language?.startsWith("tr") ? "tr" : "en";
   return (
-    <div className="inline-flex items-center rounded-full border border-border bg-bg-subtle p-0.5 text-xs">
+    <div className="inline-flex border border-brass rounded-sm overflow-hidden text-[11px] font-medium select-none">
       <button
         type="button"
         onClick={() => i18n.changeLanguage("en")}
         className={cn(
-          "px-2.5 py-1 rounded-full transition-colors",
-          lang === "en" ? "bg-bg-card text-fg shadow-sm" : "text-fg-muted hover:text-fg"
+          "px-3 py-1 transition-colors",
+          lang === "en"
+            ? "bg-navy text-cream dark:bg-brass dark:text-navy"
+            : "text-navy dark:text-cream hover:bg-brass/15"
         )}
         aria-label="English"
       >
@@ -21,8 +23,10 @@ export function LanguageToggle() {
         type="button"
         onClick={() => i18n.changeLanguage("tr")}
         className={cn(
-          "px-2.5 py-1 rounded-full transition-colors",
-          lang === "tr" ? "bg-bg-card text-fg shadow-sm" : "text-fg-muted hover:text-fg"
+          "px-3 py-1 transition-colors",
+          lang === "tr"
+            ? "bg-navy text-cream dark:bg-brass dark:text-navy"
+            : "text-navy dark:text-cream hover:bg-brass/15"
         )}
         aria-label="Türkçe"
       >

@@ -20,7 +20,7 @@ export function TierFilter({ selected, onChange }: Props) {
           key={n}
           type="button"
           onClick={() => toggle(n)}
-          className={cn("pill", selected.includes(n) && "pill-active")}
+          className={cn("pill pill-tier", selected.includes(n) && "pill-tier-active")}
         >
           {labels[i]}
         </button>

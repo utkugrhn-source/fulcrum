@@ -5,6 +5,32 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Varsity Codex palette
+        navy: {
+          DEFAULT: "#0F2540",
+          2: "#102B4A",
+          3: "#1E3656",
+        },
+        brass: {
+          DEFAULT: "#B89968",
+          2: "#C5A87A",
+          dim: "#8E8369",
+        },
+        cream: {
+          DEFAULT: "#F4ECDB",
+          2: "#EBE1C7",
+        },
+        blood: {
+          DEFAULT: "#9E2A2B",
+        },
+        ink: {
+          DEFAULT: "#4A3E2A",
+          2: "#5A4A2A",
+        },
+        leaf: {
+          DEFAULT: "#C5BDA0",
+        },
+        // Legacy/semantic aliases used by old components — map to new palette
         bg: {
           DEFAULT: "rgb(var(--bg) / <alpha-value>)",
           subtle: "rgb(var(--bg-subtle) / <alpha-value>)",
@@ -31,6 +57,11 @@ export default {
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
         serif: ["Source Serif Pro", "ui-serif", "Georgia", "serif"],
+        display: ["Noto Serif Display", "Source Serif Pro", "Georgia", "serif"],
+        mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "monospace"],
+      },
+      letterSpacing: {
+        editorial: "0.3em",
       },
     },
   },

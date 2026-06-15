@@ -1,17 +1,17 @@
 import { useTranslation } from "react-i18next";
-import { Inbox } from "lucide-react";
 
 interface Props { title?: string; body?: string }
 
 export function EmptyState({ title, body }: Props) {
   const { t } = useTranslation();
   return (
-    <div className="card p-10 text-center">
-      <div className="inline-flex w-12 h-12 items-center justify-center rounded-full bg-bg-subtle text-fg-subtle">
-        <Inbox size={22} />
+    <div className="border border-brass border-dashed rounded-sm bg-cream-2 dark:bg-navy-2 px-6 py-12 text-center">
+      <div className="body-serif italic text-[18px] text-navy dark:text-cream">
+        {title ?? t("state.empty_title")}
       </div>
-      <div className="mt-3 font-serif text-lg text-fg">{title ?? t("state.empty_title")}</div>
-      <div className="mt-1 text-sm text-fg-muted">{body ?? t("state.empty_body")}</div>
+      <div className="mt-2 body-serif italic text-[13.5px] text-ink dark:text-cream/70 max-w-md mx-auto leading-relaxed">
+        {body ?? t("state.empty_body")}
+      </div>
     </div>
   );
 }

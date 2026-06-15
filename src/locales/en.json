@@ -2,7 +2,18 @@
   "app": {
     "title": "Fulcrum",
     "tagline": "Daily orthopaedic literature, ranked.",
-    "subtitle": "An EM Pulse–inspired digest of PubMed orthopaedics, ranked by journal tier, study type and recency."
+    "subtitle": "Daily PubMed orthopaedics digest — ranked by journal tier, study type and recency. Disciplined, academic, orthopaedic-specific."
+  },
+  "hero": {
+    "eyebrow": "Today's Issue",
+    "folioPrefix": "Folio I · No."
+  },
+  "pick": {
+    "title": "Editor's Pick",
+    "context": "Today's Pick"
+  },
+  "list": {
+    "title": "Daily Ranking"
   },
   "nav": {
     "home": "Today",
@@ -10,19 +21,20 @@
     "scoring": "Scoring"
   },
   "filters": {
-    "all_subspecialties": "All subspecialties",
+    "all_subspecialties": "All",
     "subspecialty": "Subspecialty",
     "tier": "Tier",
-    "date": "Date",
-    "since_24h": "Last 24h",
-    "since_7d": "Last 7 days",
-    "since_30d": "Last 30 days",
-    "all_time": "All time",
+    "date": "Window",
+    "search": "Search",
+    "since_24h": "24h",
+    "since_7d": "7d",
+    "since_30d": "30d",
+    "all_time": "All",
     "search_placeholder": "Search title…",
     "clear": "Clear filters",
-    "tier_t1": "T1 — Top",
-    "tier_t2": "T2 — Strong",
-    "tier_t3": "T3 — Open access / general"
+    "tier_t1": "T1",
+    "tier_t2": "T2",
+    "tier_t3": "T3"
   },
   "card": {
     "score": "Score",
@@ -47,28 +59,28 @@
   },
   "state": {
     "loading": "Loading the day's papers…",
-    "empty_title": "No matching papers today",
+    "empty_title": "No matching papers",
     "empty_body": "Try widening the date window or clearing filters.",
     "supabase_missing_title": "Supabase not configured",
     "supabase_missing_body": "Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment, then redeploy."
   },
   "subspecialties": {
     "trauma": "Trauma",
-    "sports": "Sports Medicine",
+    "sports": "Sports",
     "arthroplasty": "Arthroplasty",
     "spine": "Spine",
     "pediatric": "Pediatric",
-    "hand-upper": "Hand & Upper",
+    "hand-upper": "Hand & UE",
     "foot-ankle": "Foot & Ankle",
     "shoulder-elbow": "Shoulder & Elbow",
     "onc": "Oncology",
-    "basic": "Basic Science",
+    "basic": "Basic",
     "general": "General"
   },
   "footer": {
-    "built_by": "Built by",
-    "inspired_by": "Inspired by",
-    "data_source": "Data from PubMed E-utilities.",
-    "github": "Source on GitHub"
+    "signature": "Utkugrhn · Kyrenia",
+    "edition": "Varsity Codex · v0.2",
+    "data_source": "Data: PubMed",
+    "github": "Source"
   }
 }
