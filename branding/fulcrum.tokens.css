@@ -1,0 +1,37 @@
+:root {
+  --fulcrum-navy: #0F2540;
+  --fulcrum-brass: #B89968;
+  --fulcrum-cream: #F4ECDB;
+  --fulcrum-blood: #9E2A2B;
+  --fulcrum-radius-lg: 28px;
+  --fulcrum-radius-pill: 999px;
+  --fulcrum-font-display: "Noto Serif Display", "Source Serif Pro", Georgia, serif;
+  --fulcrum-font-ui: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.fulcrum-header {
+  background: var(--fulcrum-navy);
+  color: var(--fulcrum-cream);
+  border-radius: var(--fulcrum-radius-lg);
+  border: 1px solid color-mix(in srgb, var(--fulcrum-brass) 55%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 18px 28px;
+}
+
+.fulcrum-brand { display: flex; align-items: center; gap: 16px; text-decoration: none; color: inherit; }
+.fulcrum-brand__mark { width: 52px; height: 52px; }
+.fulcrum-brand__word { font-family: var(--fulcrum-font-display); font-style: italic; font-weight: 700; font-size: clamp(2rem, 4vw, 3.25rem); letter-spacing: -0.04em; line-height: .9; }
+.fulcrum-brand__word::first-letter { color: var(--fulcrum-blood); }
+.fulcrum-nav { display: flex; align-items: center; gap: 28px; font-family: var(--fulcrum-font-ui); font-size: 15px; }
+.fulcrum-nav a { color: var(--fulcrum-cream); text-decoration: none; opacity: .88; }
+.fulcrum-nav a:hover { opacity: 1; }
+.fulcrum-cta { border-radius: var(--fulcrum-radius-pill); background: var(--fulcrum-cream); color: var(--fulcrum-navy); padding: 10px 18px; font-weight: 700; }
+
+@media (max-width: 760px) {
+  .fulcrum-header { padding: 14px 16px; }
+  .fulcrum-nav a:not(.fulcrum-cta) { display: none; }
+  .fulcrum-brand__mark { width: 44px; height: 44px; }
+}

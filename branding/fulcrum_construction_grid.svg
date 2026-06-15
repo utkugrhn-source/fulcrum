@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="536" viewBox="0 0 512 536" role="img" aria-labelledby="title desc">
+<title id="title">Fulcrum construction grid</title>
+<desc id="desc">Fulcrum identity mark: Andry sapling and fulcrum pivot fused into a restrained modern orthopedic symbol.</desc>
+<style>
+  :root { --navy:#0F2540; --brass:#B89968; --cream:#F4ECDB; --blood:#9E2A2B; }
+  .word { font-family: 'Noto Serif Display','Noto Serif','Source Serif Pro',Georgia,serif; font-style: italic; font-weight: 700; letter-spacing: -1.8px; }
+  .meta { font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight: 650; letter-spacing: .18em; }
+  .nav { font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight: 500; }
+  
+</style>
+
+
+<rect width="100%" height="100%" fill="#F4ECDB"/>
+<defs>
+  <pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse">
+    <path d="M16 0H0V16" fill="none" stroke="#0F2540" stroke-width=".5" opacity=".16"/>
+  </pattern>
+</defs>
+<rect x="32" y="32" width="448" height="448" fill="url(#grid)"/>
+<circle cx="256" cy="256" r="112" fill="none" stroke="#B89968" stroke-width="2" opacity=".55"/>
+<line x1="256" y1="48" x2="256" y2="464" stroke="#9E2A2B" stroke-width="1" opacity=".35"/>
+<line x1="48" y1="376" x2="464" y2="376" stroke="#9E2A2B" stroke-width="1" opacity=".35"/>
+<g transform="translate(128 128)" style="--sapling:#0F2540; --leaf:#0F2540; --stroke:#F4ECDB; --wedge:#B89968; --line:#B89968; --pole:#B89968; --pivot:#9E2A2B; --tie:#9E2A2B;">
+<g id="fulcrum-mark" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <!-- ground / editorial rule -->
+  <path d="M54 188 H202" stroke="var(--line, #B89968)" stroke-width="7"/>
+  <!-- fulcrum wedge: small, readable, not mascot-like -->
+  <path d="M102 188 L128 139 L154 188 Z" fill="var(--wedge, #B89968)" stroke="var(--stroke, #F4ECDB)" stroke-width="4"/>
+  <circle cx="128" cy="139" r="7.5" fill="var(--pivot, #9E2A2B)" stroke="var(--stroke, #F4ECDB)" stroke-width="3"/>
+  <!-- support pole / Andry pole modernized -->
+  <path d="M113 176 V64" stroke="var(--pole, #B89968)" stroke-width="10"/>
+  <path d="M113 176 V64" stroke="var(--pole-hi, #F4ECDB)" stroke-width="3" opacity=".8"/>
+  <!-- sapling curve: wraps around pole, anchored at pivot -->
+  <path d="M130 177 C139 155 142 139 135 121 C127 101 136 84 160 66" stroke="var(--sapling, #0F2540)" stroke-width="8"/>
+  <path d="M130 177 C139 155 142 139 135 121 C127 101 136 84 160 66" stroke="var(--sapling-hi, #F4ECDB)" stroke-width="3" opacity=".65"/>
+  <!-- leaves, restrained botanical geometry -->
+  <path d="M158 66 C178 49 198 52 207 68 C189 76 172 77 158 66Z" fill="var(--leaf, #0F2540)" stroke="var(--stroke, #F4ECDB)" stroke-width="3"/>
+  <path d="M137 102 C153 88 170 89 179 102 C163 110 150 111 137 102Z" fill="var(--leaf, #0F2540)" stroke="var(--stroke, #F4ECDB)" stroke-width="3"/>
+  <path d="M132 126 C112 112 92 116 82 132 C102 140 119 140 132 126Z" fill="var(--leaf, #0F2540)" stroke="var(--stroke, #F4ECDB)" stroke-width="3"/>
+  <!-- tie points: specific rope reference, no texture -->
+  <path d="M96 99 C108 92 121 92 132 99" stroke="var(--tie, #9E2A2B)" stroke-width="5"/>
+  <path d="M96 113 C108 106 121 106 132 113" stroke="var(--tie, #9E2A2B)" stroke-width="5"/>
+  <path d="M97 99 L131 113" stroke="var(--tie, #9E2A2B)" stroke-width="3" opacity=".75"/>
+  <path d="M97 113 L131 99" stroke="var(--tie, #9E2A2B)" stroke-width="3" opacity=".75"/>
+</g></g>
+<text class="meta" x="48" y="508" font-size="13" fill="#0F2540" opacity=".75">CLEARSPACE: 1× PIVOT DIAMETER · MINIMUM ICON SIZE: 16PX</text>
+
+</svg>

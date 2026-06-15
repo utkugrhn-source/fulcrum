@@ -1,0 +1,22 @@
+{
+  "color": {
+    "navy": "#0F2540",
+    "brass": "#B89968",
+    "cream": "#F4ECDB",
+    "blood": "#9E2A2B",
+    "ink": "#111111",
+    "muted": "#D5C9B1"
+  },
+  "font": {
+    "display": "Noto Serif Display / Source Serif Pro / Georgia",
+    "ui": "Inter / system-ui"
+  },
+  "radius": {
+    "large": "28px",
+    "pill": "999px"
+  },
+  "minSize": {
+    "mark": "16px absolute / 32px recommended",
+    "lockup": "180px"
+  }
+}

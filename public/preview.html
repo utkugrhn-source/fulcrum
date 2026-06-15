@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fulcrum — Varsity Codex Preview</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+Display:ital,wght@1,700&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --navy: #0F2540;
+  --navy-2: #102B4A;
+  --brass: #B89968;
+  --cream: #F4ECDB;
+  --cream-2: #EBE1C7;
+  --blood: #9E2A2B;
+  --ink: #4A3E2A;
+  --ink-2: #5A4A2A;
+  --leaf: #C5BDA0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--cream); color: var(--navy); font-family: Inter, sans-serif; font-size: 15px; line-height: 1.5; }
+body[data-theme="navy"] { background: var(--navy); color: var(--cream); }
+body[data-theme="navy"] .hero, body[data-theme="navy"] .pick, body[data-theme="navy"] .fl, body[data-theme="navy"] .ft, body[data-theme="navy"] .hd { background: var(--navy); color: var(--cream); }
+body[data-theme="navy"] .hero-title, body[data-theme="navy"] .pick-title, body[data-theme="navy"] .hd-brand-word { color: var(--cream); }
+body[data-theme="navy"] .pick { background: var(--navy-2); }
+body[data-theme="navy"] .pill { color: var(--cream); border-color: var(--brass); }
+body[data-theme="navy"] .pill.on { background: var(--brass); color: var(--navy); border-color: var(--brass); }
+body[data-theme="navy"] .fl-search { color: var(--cream); }
+body[data-theme="navy"] .pick-title, body[data-theme="navy"] .pick-note { color: var(--cream); }
+body[data-theme="navy"] .hero-tag, body[data-theme="navy"] .pick-foot { color: rgba(245,236,219,0.7); }
+body[data-theme="navy"] .lhd-title { color: var(--brass); }
+.app { max-width: 920px; margin: 0 auto; }
+.hd { display: flex; justify-content: space-between; align-items: center; padding: 18px 28px; border-bottom: 1px solid var(--brass); }
+.hd-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+.hd-brand-mark { width: 44px; height: 44px; }
+.hd-brand-word { font-family: 'Noto Serif Display', serif; font-style: italic; font-weight: 700; font-size: 30px; letter-spacing: -0.04em; color: var(--navy); }
+.hd-brand-word b { color: var(--blood); font-weight: 700; }
+.hd-nav { display: flex; gap: 14px; align-items: center; }
+.hd-lang { display: flex; border: 1px solid var(--brass); border-radius: 2px; overflow: hidden; font-size: 11px; font-weight: 500; user-select: none; }
+.hd-lang span { padding: 5px 11px; cursor: pointer; }
+.hd-lang .on { background: var(--navy); color: var(--cream); }
+.hd-lang .off { color: var(--navy); }
+.hd-theme { width: 28px; height: 28px; border: 1px solid var(--brass); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; color: inherit; cursor: pointer; background: transparent; }
+.hero { padding: 32px 28px 22px; border-bottom: 1px solid var(--brass); position: relative; }
+.hero-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.3em; color: var(--blood); text-transform: uppercase; margin-bottom: 8px; }
+.hero-title { font-family: 'Noto Serif Display', serif; font-style: italic; font-weight: 700; font-size: 56px; line-height: 1; letter-spacing: -0.02em; }
+.hero-rule { width: 72px; border-top: 2px solid var(--brass); margin: 16px 0 12px; }
+.hero-tag { font-family: 'Source Serif Pro', serif; font-size: 15px; color: var(--ink); line-height: 1.6; max-width: 520px; }
+.hero-folio { position: absolute; top: 32px; right: 28px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: var(--ink); text-align: right; line-height: 1.6; text-transform: uppercase; }
+.pick { background: var(--cream-2); padding: 24px 28px 26px; border-bottom: 1px solid var(--brass); }
+.pick-band { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.pick-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.3em; color: var(--blood); text-transform: uppercase; font-weight: 500; }
+.pick-week { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--ink-2); text-transform: uppercase; }
+.pick-dot { color: var(--brass); }
+.pick-body { display: grid; grid-template-columns: 100px 1fr 130px; gap: 22px; align-items: center; }
+.pick-seal { width: 84px; height: 88px; flex-shrink: 0; }
+.pick-meta { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+.tier-badge { font-family: 'Source Serif Pro', serif; font-style: italic; font-weight: 700; font-size: 13px; color: var(--navy); border: 1px solid var(--brass); padding: 1px 8px; border-radius: 2px; background: rgba(184,153,104,0.2); }
+.pick-sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--blood); text-transform: uppercase; font-weight: 500; }
+.pick-title { font-family: 'Source Serif Pro', serif; font-weight: 700; font-size: 24px; line-height: 1.25; color: var(--navy); margin: 4px 0 10px; letter-spacing: -0.01em; }
+.pick-note { font-family: 'Source Serif Pro', serif; font-style: italic; font-size: 13.5px; color: var(--ink); line-height: 1.6; max-width: 460px; }
+.pick-foot { display: flex; gap: 12px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-2); letter-spacing: 0.12em; text-transform: uppercase; flex-wrap: wrap; }
+.pick-foot a { color: var(--blood); text-decoration: none; cursor: pointer; }
+.pick-foot a:hover { color: var(--navy); }
+.pick-meta-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; text-align: right; }
+.pick-score-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--ink-2); text-transform: uppercase; }
+.pick-score-val { font-family: 'Source Serif Pro', serif; font-style: italic; font-weight: 700; font-size: 48px; line-height: 1; color: var(--blood); }
+.pick-journal { font-family: 'Source Serif Pro', serif; font-style: italic; font-size: 12.5px; color: var(--navy); max-width: 120px; line-height: 1.3; margin-top: 6px; }
+.fl { padding: 16px 28px; border-bottom: 1px solid var(--brass); background: var(--cream); }
+.fl-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 10px; }
+.fl-row:last-child { margin-bottom: 0; }
+.fl-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--ink-2); text-transform: uppercase; margin-right: 8px; min-width: 70px; }
+.fl-search-wrap { flex: 1; min-width: 200px; }
+.fl-search { width: 100%; padding: 6px 12px; border: 1px solid var(--brass); background: transparent; font-family: 'Source Serif Pro', serif; font-style: italic; font-size: 13px; color: var(--navy); border-radius: 2px; }
+.fl-search:focus { outline: none; border-color: var(--blood); }
+.pill { font-family: Inter, sans-serif; font-size: 12px; font-weight: 500; padding: 4px 12px; border: 1px solid var(--brass); color: var(--navy); background: transparent; border-radius: 2px; cursor: pointer; letter-spacing: 0.01em; user-select: none; }
+.pill.on { background: var(--navy); color: var(--cream); border-color: var(--navy); }
+.pill.tier { font-family: 'Source Serif Pro', serif; font-weight: 700; font-style: italic; font-size: 13px; padding: 3px 11px; }
+.pill.tier.on { background: var(--blood); border-color: var(--blood); color: var(--cream); }
+.lhd { padding: 18px 28px 0; display: flex; justify-content: space-between; align-items: baseline; }
+.lhd-title { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.3em; color: var(--blood); text-transform: uppercase; font-weight: 500; }
+.lhd-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--ink-2); }
+.list { padding: 12px 28px 28px; display: flex; flex-direction: column; gap: 14px; }
+.card { background: var(--navy); color: var(--cream); padding: 18px 22px 14px; border-radius: 3px; position: relative; border-left: 4px solid var(--brass); display: grid; grid-template-columns: 74px 1fr 70px; gap: 18px; align-items: start; cursor: pointer; text-decoration: none; transition: background 0.15s, border-color 0.15s; }
+.card:hover { background: var(--navy-2); border-left-color: var(--blood); }
+.card.t3 { border-left-color: var(--ink-2); }
+.rank { font-family: 'Source Serif Pro', serif; font-style: italic; font-weight: 700; font-size: 42px; line-height: 0.9; color: var(--brass); padding-top: 4px; }
+.rank-prefix { font-size: 13px; vertical-align: 11px; margin-right: 2px; }
+.card.t3 .rank, .card.t3 .score-val { color: var(--leaf); }
+.card-meta { display: flex; gap: 9px; align-items: center; margin-bottom: 6px; flex-wrap: wrap; }
+.tier-c { font-family: 'Source Serif Pro', serif; font-style: italic; font-weight: 700; font-size: 13px; color: var(--brass); border: 1px solid var(--brass); padding: 1px 8px; border-radius: 2px; background: rgba(184,153,104,0.12); }
+.card.t3 .tier-c { color: var(--leaf); border-color: var(--ink-2); }
+.sub-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: var(--brass); text-transform: uppercase; }
+.type-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: var(--leaf); text-transform: uppercase; }
+.card-title { font-family: 'Source Serif Pro', serif; font-weight: 600; font-size: 17px; line-height: 1.3; color: var(--cream); margin: 6px 0 8px; letter-spacing: -0.005em; }
+.card-authors { font-family: 'Source Serif Pro', serif; font-style: italic; font-size: 13px; color: rgba(245,236,219,0.7); margin-bottom: 8px; }
+.card-foot { display: flex; align-items: baseline; gap: 11px; font-size: 11px; font-family: 'JetBrains Mono', monospace; color: rgba(245,236,219,0.55); margin-top: 6px; padding-top: 8px; border-top: 0.5px solid #1E3656; letter-spacing: 0.05em; flex-wrap: wrap; }
+.journal { color: var(--leaf); text-transform: uppercase; }
+.dot { color: var(--ink-2); }
+.link { color: var(--brass); }
+.score-col { text-align: right; padding-top: 6px; }
+.score-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.25em; color: rgba(245,236,219,0.55); text-transform: uppercase; }
+.score-val { font-family: 'Source Serif Pro', serif; font-style: italic; font-weight: 700; font-size: 32px; line-height: 1; color: var(--brass); margin-top: 4px; }
+.ft { padding: 18px 28px; border-top: 1px solid var(--brass); font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink); display: flex; justify-content: space-between; letter-spacing: 0.15em; text-transform: uppercase; background: var(--cream-2); flex-wrap: wrap; gap: 8px; }
+.loading { padding: 40px; text-align: center; font-family: 'Source Serif Pro', serif; font-style: italic; color: var(--ink-2); }
+@media (max-width: 640px) {
+  .hero-title { font-size: 38px; }
+  .hero-folio { position: static; text-align: left; margin-top: 12px; }
+  .pick-body { grid-template-columns: 1fr; gap: 14px; }
+  .pick-seal { width: 60px; height: 64px; }
+  .pick-meta-right { flex-direction: row; align-items: center; justify-content: space-between; width: 100%; }
+  .pick-score-val { font-size: 36px; }
+  .pick-journal { max-width: none; margin-top: 0; }
+  .card { grid-template-columns: 52px 1fr 56px; gap: 12px; padding: 14px 16px 12px; }
+  .rank { font-size: 32px; padding-top: 2px; }
+  .score-val { font-size: 22px; }
+  .card-title { font-size: 15px; }
+  .fl-label { display: none; }
+  .hd-brand-word { font-size: 24px; }
+  .hd-brand-mark { width: 36px; height: 36px; }
+  .hero { padding: 24px 18px 18px; }
+  .pick, .fl, .list, .lhd, .ft, .hd { padding-left: 18px; padding-right: 18px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="hd">
+<a class="hd-brand" href="/" aria-label="Fulcrum home">
+<svg class="hd-brand-mark" viewBox="0 0 256 256" role="img" aria-label="Fulcrum mark"><rect width="224" height="224" x="16" y="16" rx="36" fill="#F4ECDB"/><g fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M54 188 H202" stroke="#B89968" stroke-width="7"/><path d="M102 188 L128 139 L154 188 Z" fill="#B89968" stroke="#F4ECDB" stroke-width="4"/><circle cx="128" cy="139" r="7.5" fill="#9E2A2B" stroke="#F4ECDB" stroke-width="3"/><path d="M113 176 V64" stroke="#B89968" stroke-width="10"/><path d="M130 177 C139 155 142 139 135 121 C127 101 136 84 160 66" stroke="#0F2540" stroke-width="8"/><path d="M158 66 C178 49 198 52 207 68 C189 76 172 77 158 66Z" fill="#0F2540" stroke="#F4ECDB" stroke-width="3"/><path d="M137 102 C153 88 170 89 179 102 C163 110 150 111 137 102Z" fill="#0F2540" stroke="#F4ECDB" stroke-width="3"/><path d="M132 126 C112 112 92 116 82 132 C102 140 119 140 132 126Z" fill="#0F2540" stroke="#F4ECDB" stroke-width="3"/><path d="M96 99 C108 92 121 92 132 99" stroke="#9E2A2B" stroke-width="5"/><path d="M96 113 C108 106 121 106 132 113" stroke="#9E2A2B" stroke-width="5"/></g></svg>
+<span class="hd-brand-word"><b>F</b>ulcrum</span>
+</a>
+<div class="hd-nav">
+<div class="hd-lang" id="lang"><span class="off" data-lang="en">EN</span><span class="on" data-lang="tr">TR</span></div>
+<button class="hd-theme" id="theme" aria-label="Tema">☾</button>
+</div>
+</header>
+<section class="hero">
+<div class="hero-folio" id="folio"></div>
+<div class="hero-eyebrow" id="hero-eyebrow">Bugünün Sayısı</div>
+<div class="hero-title">Fulcrum</div>
+<div class="hero-rule"></div>
+<div class="hero-tag" id="hero-tag">Günlük PubMed ortopedi özeti — dergi katmanı, çalışma tipi ve güncellik üzerinden sıralanmış. Disiplinli, akademik, ortopedi-spesifik.</div>
+</section>
+<section class="pick" id="pick"><div class="loading">Editörün seçimi yükleniyor…</div></section>
+<section class="fl">
+<div class="fl-row"><label class="fl-label" id="fl-search-label">ARA</label><div class="fl-search-wrap"><input class="fl-search" id="search" type="search" placeholder="Başlıkta ara…"></div></div>
+<div class="fl-row" id="sub-row"></div>
+<div class="fl-row" id="tier-row"><label class="fl-label">KATMAN</label><span class="pill tier" data-tier="1">T1</span><span class="pill tier" data-tier="2">T2</span><span class="pill tier" data-tier="3">T3</span><span style="width:14px"></span><label class="fl-label" id="fl-date-label">DÖNEM</label><span class="pill" data-days="1">24sa</span><span class="pill on" data-days="7">7g</span><span class="pill" data-days="30">30g</span><span class="pill" data-days="0">Tümü</span></div>
+</section>
+<div class="lhd"><span class="lhd-title" id="lhd-title">Günlük Sıralama</span><span class="lhd-count" id="lhd-count">Yükleniyor…</span></div>
+<section class="list" id="list"><div class="loading">Makaleler yükleniyor…</div></section>
+<footer class="ft">
+<span>UTKUGRHN · KYRENIA</span>
+<span>VARSITY CODEX · v0.2 PREVIEW</span>
+<span>VERİ: PUBMED</span>
+</footer>
+</div>
+<script>
+const SUPABASE_URL = 'https://epcsrlvrinttpwrybxki.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwY3NybHZyaW50dHB3cnlieGtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0Mzc0NDYsImV4cCI6MjA5NzAxMzQ0Nn0.p85mefcp-opD1xR24A3ZfY-KQnN4z-q8QZBz7klsmWs';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const I18N = {
+  tr: { eyebrow: 'Bugünün Sayısı', tag: 'Günlük PubMed ortopedi özeti — dergi katmanı, çalışma tipi ve güncellik üzerinden sıralanmış. Disiplinli, akademik, ortopedi-spesifik.', pick: 'Editörün Seçimi', pickContext: 'GÜNÜN MAKALESİ', rank: 'Günlük Sıralama', search: 'ARA', subspec: 'YAN DAL', tier: 'KATMAN', dateLabel: 'DÖNEM', searchPlaceholder: 'Başlıkta ara…', all: 'Tümü', sub: { trauma: 'Travma', sports: 'Spor Hek.', arthroplasty: 'Artroplasti', spine: 'Omurga', pediatric: 'Pediatrik', 'hand-upper': 'El & ÜE', 'foot-ankle': 'Ayak & AB', 'shoulder-elbow': 'Omuz & Dirsek', onc: 'Onkoloji', basic: 'Temel Bilim', general: 'Genel' }, count: (n) => n + ' KAYIT', noResults: 'Eşleşen makale yok.', pubmed: 'PUBMED', doi: 'DOI', score: 'Skor', folio: (n, d) => 'FOLIO I · NO. ' + n + '<br>' + d.toUpperCase() },
+  en: { eyebrow: "Today's Issue", tag: 'Daily PubMed orthopaedics digest — ranked by journal tier, study type and recency. Disciplined, academic, orthopaedic-specific.', pick: "Editor's Pick", pickContext: "TODAY'S PICK", rank: 'Daily Ranking', search: 'SEARCH', subspec: 'SUBSPECIALTY', tier: 'TIER', dateLabel: 'WINDOW', searchPlaceholder: 'Search title…', all: 'All', sub: { trauma: 'Trauma', sports: 'Sports', arthroplasty: 'Arthroplasty', spine: 'Spine', pediatric: 'Pediatric', 'hand-upper': 'Hand & UE', 'foot-ankle': 'Foot & Ankle', 'shoulder-elbow': 'Shoulder & Elbow', onc: 'Oncology', basic: 'Basic', general: 'General' }, count: (n) => n + ' RECORDS', noResults: 'No matching articles.', pubmed: 'PUBMED', doi: 'DOI', score: 'Score', folio: (n, d) => 'FOLIO I · NO. ' + n + '<br>' + d.toUpperCase() }
+};
+let state = { lang: 'tr', subspecialties: [], selectedSubs: [], selectedTiers: [], daysWindow: 7, query: '', articles: [] };
+const t = () => I18N[state.lang];
+function svgSeal() {
+  return '<svg class="pick-seal" viewBox="0 0 72 80" role="img" aria-label="Editor seal"><circle cx="36" cy="40" r="34" fill="none" stroke="#9E2A2B" stroke-width="1.2"/><circle cx="36" cy="40" r="29" fill="none" stroke="#9E2A2B" stroke-width="0.4" stroke-dasharray="1.5 1.5"/><line x1="14" y1="62" x2="58" y2="62" stroke="#B89968" stroke-width="0.8"/><path d="M28 62 L36 50 L44 62 Z" fill="#B89968"/><line x1="36" y1="50" x2="36" y2="18" stroke="#B89968" stroke-width="2.2" stroke-linecap="round"/><path d="M42 56 Q26 48 42 38 Q58 28 42 20 Q34 16 40 12" stroke="#0F2540" stroke-width="2" fill="none" stroke-linecap="round"/><line x1="36" y1="56" x2="42" y2="56" stroke="#9E2A2B" stroke-width="1"/><line x1="36" y1="46" x2="42" y2="46" stroke="#9E2A2B" stroke-width="1"/><line x1="36" y1="36" x2="42" y2="36" stroke="#9E2A2B" stroke-width="1"/><circle cx="40" cy="12" r="2.4" fill="#0F2540"/><text x="36" y="76" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="5" letter-spacing="1" fill="#9E2A2B">EDİTÖR · SEÇİM</text></svg>';
+}
+function ageLabel(article) {
+  const date = article.entrez_date || (article.pub_date ? article.pub_date + 'T00:00:00Z' : null);
+  if (!date) return '—';
+  const ms = Date.now() - new Date(date).getTime();
+  const hr = ms / 3600000;
+  if (hr < 24) return Math.max(1, Math.round(hr)) + (state.lang === 'tr' ? 'sa' : 'h');
+  const d = Math.round(hr / 24);
+  if (d < 30) return d + (state.lang === 'tr' ? 'g' : 'd');
+  const mo = Math.round(d / 30);
+  return mo + (state.lang === 'tr' ? 'ay' : 'mo');
+}
+function fmtAuthors(list, max) {
+  list = list || []; max = max || 3;
+  if (!list.length) return '—';
+  const names = list.map(a => [a.last_name, a.initials].filter(Boolean).join(' '));
+  if (names.length <= max) return names.join(', ');
+  return names.slice(0, max).join(', ') + ', et al.';
+}
+function articleTypeLabel(types) {
+  if (!types || !types.length) return null;
+  const priority = ['Randomized Controlled Trial', 'Meta-Analysis', 'Systematic Review', 'Clinical Trial', 'Multicenter Study', 'Comparative Study', 'Observational Study', 'Review', 'Case Reports', 'Editorial', 'Letter'];
+  const set = new Set(types);
+  for (const p of priority) if (set.has(p)) return p;
+  return types[0];
+}
+function pubmedUrl(pmid) { return 'https://pubmed.ncbi.nlm.nih.gov/' + pmid + '/'; }
+function doiUrl(doi) { return doi ? 'https://doi.org/' + doi : null; }
+function escapeHtml(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function updateFolio() {
+  const d = new Date();
+  const months = state.lang === 'tr' ? ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'] : ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const dateStr = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+  const dayOfYear = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
+  document.getElementById('folio').innerHTML = t().folio(dayOfYear, dateStr);
+}
+async function loadSubspecialties() {
+  const { data } = await sb.from('subspecialties').select('*').order('display_order');
+  state.subspecialties = data || [];
+  renderSubFilter();
+}
+async function loadArticles() {
+  document.getElementById('list').innerHTML = '<div class="loading">' + (state.lang === 'tr' ? 'Makaleler yükleniyor…' : 'Loading articles…') + '</div>';
+  let q = sb.from('v_articles').select('*').order('score', { ascending: false }).limit(80);
+  if (state.selectedSubs.length) q = q.in('subspecialty', state.selectedSubs);
+  if (state.selectedTiers.length) q = q.in('tier', state.selectedTiers);
+  if (state.daysWindow > 0) {
+    const d = new Date();
+    d.setUTCDate(d.getUTCDate() - state.daysWindow);
+    q = q.gte('pub_date', d.toISOString().slice(0, 10));
+  }
+  if (state.query) q = q.ilike('title', '%' + state.query + '%');
+  const { data, error } = await q;
+  if (error) { document.getElementById('list').innerHTML = '<div class="loading">' + error.message + '</div>'; return; }
+  state.articles = data || [];
+  renderList();
+}
+function renderSubFilter() {
+  const row = document.getElementById('sub-row');
+  const label = '<label class="fl-label">' + t().subspec + '</label>';
+  const allOn = state.selectedSubs.length === 0 ? 'on' : '';
+  const allPill = '<span class="pill ' + allOn + '" data-sub="">' + t().all + '</span>';
+  const pills = state.subspecialties.map(s => {
+    const short = t().sub[s.slug] || s.name_en;
+    const active = state.selectedSubs.includes(s.slug) ? 'on' : '';
+    return '<span class="pill ' + active + '" data-sub="' + s.slug + '">' + short + '</span>';
+  }).join('');
+  row.innerHTML = label + allPill + pills;
+  row.querySelectorAll('[data-sub]').forEach(el => {
+    el.addEventListener('click', () => {
+      const slug = el.dataset.sub;
+      if (!slug) state.selectedSubs = [];
+      else if (state.selectedSubs.includes(slug)) state.selectedSubs = state.selectedSubs.filter(s => s !== slug);
+      else state.selectedSubs.push(slug);
+      renderSubFilter();
+      loadArticles();
+    });
+  });
+}
+function renderList() {
+  const list = document.getElementById('list');
+  const count = document.getElementById('lhd-count');
+  if (!state.articles.length) {
+    list.innerHTML = '<div class="loading">' + t().noResults + '</div>';
+    document.getElementById('pick').innerHTML = '<div class="loading">' + t().noResults + '</div>';
+    count.textContent = '0 ' + (state.lang === 'tr' ? 'KAYIT' : 'RECORDS');
+    return;
+  }
+  const pick = state.articles[0];
+  renderPick(pick);
+  const rest = state.articles.slice(1, 21);
+  count.textContent = t().count(state.articles.length);
+  list.innerHTML = rest.map((a, idx) => articleCard(a, idx + 2)).join('');
+}
+function renderPick(a) {
+  const subLabel = (t().sub[a.subspecialty] || a.subspecialty || '').toUpperCase();
+  const type = articleTypeLabel(a.publication_types) || 'Article';
+  const note = a.abstract ? a.abstract.slice(0, 240).replace(/\s+/g, ' ').trim() + '…' : fmtAuthors(a.authors, 6);
+  document.getElementById('pick').innerHTML = '<div class="pick-band"><span class="pick-eyebrow">★ ' + t().pick + '</span><span class="pick-dot">·</span><span class="pick-week">' + t().pickContext + ' · ' + ageLabel(a).toUpperCase() + '</span></div><div class="pick-body">' + svgSeal() + '<div><div class="pick-meta"><span class="tier-badge">T' + (a.tier || '—') + '</span><span class="pick-sub">' + subLabel + ' · ' + type + '</span></div><div class="pick-title">' + escapeHtml(a.title) + '</div><div class="pick-note">' + escapeHtml(note) + '</div><div class="pick-foot"><a href="' + pubmedUrl(a.pmid) + '" target="_blank" rel="noopener">' + t().pubmed + '</a>' + (a.doi ? '<span>·</span><a href="' + doiUrl(a.doi) + '" target="_blank" rel="noopener">' + t().doi + '</a>' : '') + '</div></div><div class="pick-meta-right"><div class="pick-score-label">' + t().score + '</div><div class="pick-score-val">' + Math.round(a.score) + '</div><div class="pick-journal">' + escapeHtml(a.journal_title || a.journal_title_raw || '') + '</div></div></div>';
+}
+function articleCard(a, n) {
+  const sub = (t().sub[a.subspecialty] || a.subspecialty || '').toUpperCase();
+  const type = articleTypeLabel(a.publication_types) || 'Article';
+  const rankStr = '<span class="rank-prefix">№</span>' + String(n).padStart(2, '0');
+  const tierClass = a.tier === 3 ? 't3' : '';
+  return '<a class="card ' + tierClass + '" href="' + pubmedUrl(a.pmid) + '" target="_blank" rel="noopener"><div class="rank">' + rankStr + '</div><div><div class="card-meta"><span class="tier-c">T' + (a.tier || '—') + '</span><span class="sub-tag">' + sub + '</span><span class="type-tag">· ' + type + '</span></div><div class="card-title">' + escapeHtml(a.title) + '</div><div class="card-authors">' + escapeHtml(fmtAuthors(a.authors, 4)) + '</div><div class="card-foot"><span class="journal">' + escapeHtml(a.journal_title || a.journal_title_raw || '') + '</span><span class="dot">·</span><span>' + ageLabel(a) + '</span><span class="dot">·</span><span class="link">' + t().pubmed + '</span>' + (a.doi ? '<span class="dot">·</span><span class="link">' + t().doi + '</span>' : '') + '</div></div><div class="score-col"><div class="score-label">' + t().score + '</div><div class="score-val">' + Math.round(a.score) + '</div></div></a>';
+}
+function relabel() {
+  document.getElementById('hero-eyebrow').textContent = t().eyebrow;
+  document.getElementById('hero-tag').textContent = t().tag;
+  document.getElementById('lhd-title').textContent = t().rank;
+  document.getElementById('fl-search-label').textContent = t().search;
+  document.getElementById('fl-date-label').textContent = t().dateLabel;
+  document.getElementById('search').placeholder = t().searchPlaceholder;
+  document.querySelector('#tier-row .fl-label').textContent = t().tier;
+  document.title = state.lang === 'tr' ? 'Fulcrum — Günlük ortopedi literatürü' : 'Fulcrum — Daily orthopaedic literature';
+  document.documentElement.lang = state.lang;
+  updateFolio();
+  renderSubFilter();
+}
+document.querySelectorAll('#lang span').forEach(el => {
+  el.addEventListener('click', () => {
+    state.lang = el.dataset.lang;
+    document.querySelectorAll('#lang span').forEach(s => { s.classList.toggle('on', s.dataset.lang === state.lang); s.classList.toggle('off', s.dataset.lang !== state.lang); });
+    relabel();
+    renderList();
+  });
+});
+document.querySelectorAll('.pill.tier').forEach(el => {
+  el.addEventListener('click', () => {
+    const tier = parseInt(el.dataset.tier);
+    if (state.selectedTiers.includes(tier)) state.selectedTiers = state.selectedTiers.filter(x => x !== tier);
+    else state.selectedTiers.push(tier);
+    el.classList.toggle('on');
+    loadArticles();
+  });
+});
+document.querySelectorAll('[data-days]').forEach(el => {
+  el.addEventListener('click', () => {
+    state.daysWindow = parseInt(el.dataset.days);
+    document.querySelectorAll('[data-days]').forEach(s => s.classList.toggle('on', parseInt(s.dataset.days) === state.daysWindow));
+    loadArticles();
+  });
+});
+let searchTimer;
+document.getElementById('search').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => { state.query = e.target.value.trim(); loadArticles(); }, 350);
+});
+document.getElementById('theme').addEventListener('click', () => {
+  const next = document.body.dataset.theme === 'navy' ? 'cream' : 'navy';
+  document.body.dataset.theme = next;
+  document.getElementById('theme').textContent = next === 'navy' ? '☀' : '☾';
+});
+(async () => { updateFolio(); await loadSubspecialties(); await loadArticles(); })();
+</script>
+</body>
+</html>
