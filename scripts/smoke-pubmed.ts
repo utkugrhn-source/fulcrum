@@ -45,6 +45,7 @@ function loadJournalsFromSeed(): JournalRow[] {
       issn_electronic: m[7] ?? null,
       tier: parseInt(m[8], 10) as 1 | 2 | 3,
       default_subspecialty: (m[10] ?? null) as JournalRow["default_subspecialty"],
+      impact_factor: null,
     });
   }
   return rows;
@@ -72,7 +73,7 @@ async function main() {
   const scored = articles.map((a) => {
     const j = matchJournal(idx, { title_raw: a.journal_title_raw, iso: a.journal_iso, issn: a.issn });
     const cls = classifySubspecialty(a, j);
-    const s = scoreArticle({ article: a, tier: j?.tier ?? null, now });
+    const s = scoreArticle({ article: a, tier: j?.tier ?? null, impact_factor: j?.impact_factor ?? null, now });
     return { a, j, cls, s };
   }).sort((x, y) => y.s.score - x.s.score);
 

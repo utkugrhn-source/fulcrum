@@ -58,7 +58,7 @@ function FeatureCard({ article, pos }: { article: Article; pos: Position }) {
   const ocebm = ocebmLabel(article.ocebm_level);
   const note = article.abstract
     ? article.abstract.replace(/\s+/g, " ").trim().slice(0, 220) + "…"
-    : formatAuthors(article.authors, 6);
+    : formatAuthors(article, 6);
 
   return (
     <Link
