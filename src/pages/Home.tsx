@@ -5,7 +5,7 @@ import { supabaseConfigured } from "@/lib/supabase";
 import type { Subspecialty } from "@/types";
 import { useArticles } from "@/hooks/useArticles";
 import { ArticleCard } from "@/components/ArticleCard";
-import { EditorsPick } from "@/components/EditorsPick";
+import { PodiumTop3 } from "@/components/PodiumTop3";
 import { CardSkeleton } from "@/components/Skeleton";
 import { EmptyState } from "@/components/EmptyState";
 import { SubspecialtyFilter } from "@/components/SubspecialtyFilter";
@@ -70,8 +70,8 @@ export function Home() {
     );
   }
 
-  const pick = articles[0];
-  const rest = articles.slice(1);
+  const podiumArticles = articles.slice(0, 3);
+  const rest = articles.slice(3);
   const hasFiltersActive = selectedSubs.length || selectedTiers.length || dateWindow !== "7d" || q;
 
   return (
@@ -95,8 +95,8 @@ export function Home() {
         </div>
       </section>
 
-      {/* Editor's Pick */}
-      {!loading && pick && <EditorsPick article={pick} />}
+      {/* Podium — top 3 */}
+      {!loading && podiumArticles.length > 0 && <PodiumTop3 articles={podiumArticles} />}
 
       {/* Filters */}
       <section className="container-prose py-4 border-b border-brass">
@@ -175,7 +175,7 @@ export function Home() {
           <ul className="space-y-3">
             {rest.map((a, idx) => (
               <li key={a.pmid}>
-                <ArticleCard article={a} rank={idx + 2} />
+                <ArticleCard article={a} rank={idx + 4} />
               </li>
             ))}
           </ul>

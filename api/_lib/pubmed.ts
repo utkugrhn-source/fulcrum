@@ -237,17 +237,45 @@ function parsePublicationTypes(ptl: any): string[] {
   return items.map((p) => pickText(p)).filter((s): s is string => !!s);
 }
 
-function parseArticleIds(pubmedData: any): { doi?: string; pmid?: string } {
+function parseArticleIds(pubmedData: any): { doi?: string; pmid?: string; pmc_id?: string } {
   const items = asArray(pubmedData?.ArticleIdList?.ArticleId);
   let doi: string | undefined;
   let pmid: string | undefined;
+  let pmc_id: string | undefined;
   for (const it of items) {
     const idType = (it as any)["@_IdType"];
     const val = pickText(it);
     if (idType === "doi" && val) doi = val;
     if (idType === "pubmed" && val) pmid = val;
+    if (idType === "pmc" && val) pmc_id = val.startsWith("PMC") ? val : `PMC${val}`;
   }
-  return { doi, pmid };
+  return { doi, pmid, pmc_id };
+}
+
+/**
+ * Try to extract a study sample size from the abstract.
+ * Looks for patterns like "n = 1,234", "N=487", "total of 32,960 patients",
+ * "324 participants", "comprising 100 subjects".
+ * Returns the LARGEST plausible match (totals usually beat subgroup counts).
+ */
+export function extractSampleSize(abstract: string | undefined): number | undefined {
+  if (!abstract) return undefined;
+  const text = abstract.replace(/ /g, " ");
+  const candidates: number[] = [];
+  const patterns: RegExp[] = [
+    /\b[nN]\s*=\s*([\d,]+)\b/g,
+    /\b(?:total of|enrolled|recruited|included|comprising|comprised|cohort of|sample of|consisted of)\s+([\d,]+)\s+(?:patients|participants|subjects|individuals|cases|knees|hips|shoulders|elbows|ankles|spines|fractures|implants|procedures)\b/gi,
+    /\b([\d,]+)\s+(?:patients|participants|subjects|individuals|cases|knees|hips|shoulders|elbows|ankles|fractures|implants|procedures)\s+were\b/gi,
+  ];
+  for (const re of patterns) {
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(text)) !== null) {
+      const n = parseInt(m[1].replace(/,/g, ""), 10);
+      if (Number.isFinite(n) && n >= 5 && n <= 10_000_000) candidates.push(n);
+    }
+  }
+  if (!candidates.length) return undefined;
+  return Math.max(...candidates);
 }
 
 function parsePubmedXml(xml: string): PubMedArticle[] {
@@ -278,12 +306,15 @@ function mapArticle(node: any): PubMedArticle | null {
 
   const ids = parseArticleIds(node.PubmedData);
   const entrezDate = parseEntrezDate(node.PubmedData);
+  const abstractText = joinAbstract(article.Abstract);
+  const sampleSize = extractSampleSize(abstractText);
 
   return {
     pmid,
     doi: ids.doi,
+    pmc_id: ids.pmc_id,
     title: stripTrailingDot(titleRaw),
-    abstract: joinAbstract(article.Abstract),
+    abstract: abstractText,
     authors: parseAuthors(article.AuthorList),
     journal_title_raw: journalRaw,
     journal_iso: pickText(article.Journal?.ISOAbbreviation),
@@ -293,6 +324,7 @@ function mapArticle(node: any): PubMedArticle | null {
     keywords: parseKeywords(med.KeywordList),
     pub_date: parsePubDate(article),
     entrez_date: entrezDate,
+    sample_size: sampleSize,
   };
 }
 

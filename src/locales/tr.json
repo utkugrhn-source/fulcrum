@@ -12,6 +12,10 @@
     "title": "Editörün Seçimi",
     "context": "Günün Makalesi"
   },
+  "podium": {
+    "title": "Bu Haftanın Üçlüsü",
+    "context": "En yüksek skorlu 3 makale"
+  },
   "list": {
     "title": "Günlük Sıralama"
   },

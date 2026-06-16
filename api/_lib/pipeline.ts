@@ -64,11 +64,21 @@ export async function runPipeline(opts: PipelineOptions = {}): Promise<PipelineR
       issn: a.issn,
     });
     const cls = classifySubspecialty(a, journal);
-    const s = scoreArticle({ article: a, tier: journal?.tier ?? null, now });
+    const s = scoreArticle({
+      article: a,
+      tier: journal?.tier ?? null,
+      impact_factor: journal?.impact_factor ?? null,
+      now,
+    });
     return {
       ...a,
       tier: s.tier,
       type_weight: s.type_weight,
+      ocebm_weight: s.ocebm_weight,
+      ocebm_level: s.ocebm_level,
+      jif_weight: s.jif_weight,
+      n_weight: s.n_weight,
+      oa_bonus: s.oa_bonus,
       recency_weight: s.recency_weight,
       score: s.score,
       subspecialty: cls.slug,
@@ -83,6 +93,7 @@ export async function runPipeline(opts: PipelineOptions = {}): Promise<PipelineR
     const rows = scored.map((s) => ({
       pmid: s.pmid,
       doi: s.doi ?? null,
+      pmc_id: s.pmc_id ?? null,
       title: s.title,
       abstract: s.abstract ?? null,
       authors: s.authors,
@@ -93,15 +104,20 @@ export async function runPipeline(opts: PipelineOptions = {}): Promise<PipelineR
       keywords: s.keywords,
       pub_date: s.pub_date ?? null,
       entrez_date: s.entrez_date ?? null,
+      sample_size: s.sample_size ?? null,
       tier: s.tier,
+      ocebm_level: s.ocebm_level,
       type_weight: s.type_weight,
+      ocebm_weight: s.ocebm_weight,
+      jif_weight: s.jif_weight,
+      n_weight: s.n_weight,
+      oa_bonus: s.oa_bonus,
       recency_weight: s.recency_weight,
       score: s.score,
       subspecialty: s.subspecialty,
       subspecialty_source: s.subspecialty_source,
       scored_at: new Date().toISOString(),
     }));
-    // Supabase JS limits payloads — chunk to 100/req for safety.
     for (let i = 0; i < rows.length; i += 100) {
       const chunk = rows.slice(i, i + 100);
       const { error } = await sb.from("articles").upsert(chunk, {

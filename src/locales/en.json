@@ -12,6 +12,10 @@
     "title": "Editor's Pick",
     "context": "Today's Pick"
   },
+  "podium": {
+    "title": "This Week's Top 3",
+    "context": "Three highest-scored papers"
+  },
   "list": {
     "title": "Daily Ranking"
   },

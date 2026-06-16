@@ -12,23 +12,32 @@ export type SubspecialtySlug =
   | "general";
 
 export type Tier = 1 | 2 | 3;
+export type OcebmLevel = "1a" | "1b" | "2a" | "2b" | "3" | "4" | "5";
 
 export interface Article {
   pmid: string;
   doi: string | null;
+  pmc_id: string | null;
   title: string;
   abstract: string | null;
   authors: Array<{ last_name?: string; fore_name?: string; initials?: string }>;
   journal_title_raw: string;
   journal_title: string | null;
   journal_iso: string | null;
+  journal_if: number | null;
   publication_types: string[];
   mesh_headings: string[];
   keywords: string[];
   pub_date: string | null;
   entrez_date: string | null;
+  sample_size: number | null;
+  ocebm_level: OcebmLevel | null;
   tier: Tier | null;
   type_weight: number;
+  ocebm_weight: number;
+  jif_weight: number;
+  n_weight: number;
+  oa_bonus: number;
   recency_weight: number;
   score: number;
   subspecialty: SubspecialtySlug;

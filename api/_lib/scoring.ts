@@ -1,86 +1,78 @@
-// Fulcrum scoring formula.
+// Fulcrum scoring formula — v0.3 (evidence-based).
 //
-//   score = tier_weight * type_weight * recency_weight * 100
+//   score = JIF × OCEBM × Recency × N × OA × 100
 //
-// EM Pulse uses the same multiplicative composition. We tune the constants
-// so a "fresh RCT in a T1 journal" reliably tops the list (~225)
-// and "month-old editorial in a T3" floors near 5.
+// References (see docs/SCORING.md for the full write-up):
+//   - OCEBM Levels of Evidence (Oxford CEBM)
+//   - Wu et al., 2015, PMC4320734 — applicability equation
+//   - 2024 JCR Impact Factor data for orthopaedic journals
+//
+// Each weight is clamped so a single signal can not dominate.
 
-import type { PubMedArticle, Tier } from "./types.js";
+import type { PubMedArticle, Tier, OcebmLevel } from "./types.js";
 
-export interface ScoreInput {
-  article: PubMedArticle;
-  tier: Tier | null;
-  now: Date;
+// ---------------------------------------------------------------------------
+// JIF weight — derived from the journal's JCR Impact Factor.
+// Log-curve so a 4×IF difference isn't a 4× score difference.
+// Fallback to tier when IF is missing.
+//   IF=0  → 0.30
+//   IF=1  → 0.40
+//   IF=3  → 0.65
+//   IF=6  → 0.92
+//   IF=10 → 1.10
+//   IF=15 → 1.25
+//   capped at 1.50
+// ---------------------------------------------------------------------------
+export function jifWeight(impactFactor: number | null, tier: Tier | null): number {
+  if (impactFactor === null || impactFactor === undefined) {
+    if (tier === 1) return 1.10;
+    if (tier === 2) return 0.80;
+    if (tier === 3) return 0.55;
+    return 0.40;
+  }
+  const w = 0.30 + 0.32 * Math.log2(impactFactor + 1);
+  return round3(Math.min(1.50, Math.max(0.25, w)));
 }
 
-export interface ScoreOutput {
-  tier: Tier | null;
-  type_weight: number;
-  recency_weight: number;
-  score: number;
-}
-
 // ---------------------------------------------------------------------------
-// Tier weights.  Generalist T1 journals get a small bump over T2 to reflect
-// real readership/citation patterns.
+// OCEBM weight + level — mapped from MEDLINE publication types.
 // ---------------------------------------------------------------------------
-const TIER_WEIGHT: Record<1 | 2 | 3, number> = {
-  1: 1.50,
-  2: 1.10,
-  3: 0.75,
-};
-// Articles whose journal we couldn't match drop to a soft default.
-const UNKNOWN_TIER_WEIGHT = 0.50;
-
-// ---------------------------------------------------------------------------
-// MEDLINE Publication Type → weight.
-// We keep the highest matching weight per article (an RCT also tagged
-// "Comparative Study" should not be penalised).
-// ---------------------------------------------------------------------------
-const TYPE_WEIGHT_TABLE: Array<[string, number]> = [
-  ["Randomized Controlled Trial", 1.50],
-  ["Meta-Analysis",               1.40],
-  ["Systematic Review",           1.30],
-  ["Practice Guideline",          1.25],
-  ["Guideline",                   1.20],
-  ["Clinical Trial, Phase III",   1.20],
-  ["Clinical Trial, Phase II",    1.10],
-  ["Clinical Trial",              1.10],
-  ["Multicenter Study",           1.10],
-  ["Comparative Study",           1.05],
-  ["Observational Study",         1.00],
-  ["Journal Article",             0.95],
-  ["Review",                      0.95],   // narrative review — lower than systematic
-  ["Case Reports",                0.70],
-  ["Editorial",                   0.60],
-  ["Letter",                      0.50],
-  ["Comment",                     0.50],
-  ["Published Erratum",           0.20],
+const OCEBM_FROM_PUBTYPE: Array<[string, OcebmLevel, number]> = [
+  ["Meta-Analysis",                 "1a", 1.50],
+  ["Systematic Review",             "1a", 1.40],
+  ["Randomized Controlled Trial",   "1b", 1.40],
+  ["Practice Guideline",            "1a", 1.35],
+  ["Guideline",                     "1a", 1.30],
+  ["Clinical Trial, Phase III",     "1b", 1.30],
+  ["Clinical Trial, Phase II",      "2a", 1.15],
+  ["Multicenter Study",             "2a", 1.15],
+  ["Clinical Trial",                "2a", 1.10],
+  ["Comparative Study",             "2b", 1.05],
+  ["Observational Study",           "2b", 1.00],
+  ["Review",                        "3",  0.95],
+  ["Journal Article",               "3",  0.90],
+  ["Case Reports",                  "4",  0.70],
+  ["Editorial",                     "5",  0.55],
+  ["Letter",                        "5",  0.50],
+  ["Comment",                       "5",  0.50],
+  ["Published Erratum",             "5",  0.20],
 ];
 
-export function typeWeight(publicationTypes: string[]): number {
-  if (publicationTypes.length === 0) return 0.90;
-  let best = 0;
-  const lc = new Set(publicationTypes.map((t) => t.toLowerCase()));
-  for (const [label, w] of TYPE_WEIGHT_TABLE) {
-    if (lc.has(label.toLowerCase())) {
-      if (w > best) best = w;
+export function ocebmFromTypes(types: string[]): { level: OcebmLevel | null; weight: number } {
+  if (!types || types.length === 0) return { level: "3", weight: 0.85 };
+  const lc = new Set(types.map((t) => t.toLowerCase()));
+  let best: { level: OcebmLevel | null; weight: number } = { level: null, weight: 0 };
+  for (const [label, level, weight] of OCEBM_FROM_PUBTYPE) {
+    if (lc.has(label.toLowerCase()) && weight > best.weight) {
+      best = { level, weight };
     }
   }
-  return best || 0.90;
+  if (best.weight === 0) return { level: "3", weight: 0.85 };
+  return best;
 }
 
 // ---------------------------------------------------------------------------
-// Recency.  We use Entrez date when present (more reliable for "appeared on
-// PubMed"), falling back to pub_date.
-//
-//    0..24h  → 1.50
-//   24..72h  → 1.30
-//   3..7d    → 1.20
-//   7..30d   → 1.00
-//   30..90d  → exp decay from 0.85 → 0.40
-//   >90d     → 0.30
+// Recency weight — unchanged from v0.1.
 // ---------------------------------------------------------------------------
 export function recencyWeight(article: PubMedArticle, now: Date): number {
   const dateStr = article.entrez_date ?? (article.pub_date ? `${article.pub_date}T00:00:00.000Z` : null);
@@ -94,7 +86,6 @@ export function recencyWeight(article: PubMedArticle, now: Date): number {
   if (hours <= 168) return 1.20;
   if (hours <= 720) return 1.00;
   if (hours <= 2160) {
-    // 30..90 days: linear decay 0.85 → 0.40
     const k = (hours - 720) / (2160 - 720);
     return Math.max(0.40, 0.85 - k * 0.45);
   }
@@ -102,19 +93,75 @@ export function recencyWeight(article: PubMedArticle, now: Date): number {
 }
 
 // ---------------------------------------------------------------------------
-// Final composer.
+// Sample size weight — meaningful for clinical studies.
+//   N < 30   → 0.80
+//   N = 100  → 0.95
+//   N = 500  → 1.02
+//   N = 2000 → 1.08
+//   N ≥ 10000→ 1.15
+//   missing  → 1.00 (no penalty)
 // ---------------------------------------------------------------------------
+export function sampleSizeWeight(n: number | null | undefined): number {
+  if (n === null || n === undefined || !Number.isFinite(n) || n <= 0) return 1.00;
+  if (n < 30) return 0.80;
+  const w = 0.70 + 0.10 * Math.log10(n + 1);
+  return round3(Math.min(1.25, Math.max(0.80, w)));
+}
+
+// ---------------------------------------------------------------------------
+// Open access bonus — PMC full-text = ×1.08
+// ---------------------------------------------------------------------------
+export function oaBonus(pmcId: string | null | undefined): number {
+  return pmcId ? 1.08 : 1.00;
+}
+
+// ---------------------------------------------------------------------------
+// Composer.
+// ---------------------------------------------------------------------------
+export interface ScoreInput {
+  article: PubMedArticle;
+  tier: Tier | null;
+  impact_factor: number | null;
+  now: Date;
+}
+
+export interface ScoreOutput {
+  tier: Tier | null;
+  jif_weight: number;
+  ocebm_level: OcebmLevel | null;
+  ocebm_weight: number;
+  recency_weight: number;
+  n_weight: number;
+  oa_bonus: number;
+  /** Backward-compatibility alias equal to ocebm_weight. */
+  type_weight: number;
+  score: number;
+}
+
 export function scoreArticle(input: ScoreInput): ScoreOutput {
-  const tw = input.tier ? TIER_WEIGHT[input.tier] : UNKNOWN_TIER_WEIGHT;
-  const typew = typeWeight(input.article.publication_types);
-  const recw = recencyWeight(input.article, input.now);
-  const raw = tw * typew * recw * 100;
+  const jif = jifWeight(input.impact_factor, input.tier);
+  const { level, weight: ocebm } = ocebmFromTypes(input.article.publication_types);
+  const rec = recencyWeight(input.article, input.now);
+  const n = sampleSizeWeight(input.article.sample_size);
+  const oa = oaBonus(input.article.pmc_id);
+  const raw = jif * ocebm * rec * n * oa * 100;
+
   return {
     tier: input.tier,
-    type_weight: round3(typew),
-    recency_weight: round3(recw),
+    jif_weight: jif,
+    ocebm_level: level,
+    ocebm_weight: round3(ocebm),
+    recency_weight: round3(rec),
+    n_weight: round3(n),
+    oa_bonus: round3(oa),
+    type_weight: round3(ocebm),
     score: round2(raw),
   };
+}
+
+/** Legacy export kept so any callers that still import `typeWeight` continue to compile. */
+export function typeWeight(publicationTypes: string[]): number {
+  return ocebmFromTypes(publicationTypes).weight;
 }
 
 function round2(n: number): number { return Math.round(n * 100) / 100; }
