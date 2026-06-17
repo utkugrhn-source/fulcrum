@@ -106,24 +106,51 @@ export function ArticleDetail() {
 
       <section className={`mt-4 ${card}`}>
         <h2 className="editorial text-[11px] tracking-[0.3em] text-brass mb-4">{t("detail.scoring_breakdown")}</h2>
-        <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           <div>
-            <dt className="editorial text-[9px] tracking-[0.25em] text-leaf">{t("detail.tier_label")}</dt>
-            <dd className="mt-1 font-serif italic font-bold text-[20px] text-brass">T{article.tier ?? "—"}</dd>
+            <dt className="editorial text-[9px] tracking-[0.25em] text-leaf">{t("detail.jif_weight")}</dt>
+            <dd className="mt-1 font-mono text-[14px] text-cream">×{Number(article.jif_weight).toFixed(2)}</dd>
+            {article.journal_if != null && (
+              <div className="editorial text-[9px] tracking-[0.18em] text-leaf/70 mt-0.5">IF {Number(article.journal_if).toFixed(1)}</div>
+            )}
           </div>
           <div>
-            <dt className="editorial text-[9px] tracking-[0.25em] text-leaf">{t("detail.type_weight")}</dt>
-            <dd className="mt-1 font-mono text-[14px] text-cream">×{article.type_weight}</dd>
+            <dt className="editorial text-[9px] tracking-[0.25em] text-leaf">{t("detail.ocebm_weight")}</dt>
+            <dd className="mt-1 font-mono text-[14px] text-cream">×{Number(article.ocebm_weight ?? article.type_weight).toFixed(2)}</dd>
+            {article.ocebm_level && (
+              <div className="editorial text-[9px] tracking-[0.18em] text-leaf/70 mt-0.5">OCEBM {article.ocebm_level}</div>
+            )}
+          </div>
+          <div>
+            <dt className="editorial text-[9px] tracking-[0.25em] text-leaf">{t("detail.n_weight")}</dt>
+            <dd className="mt-1 font-mono text-[14px] text-cream">×{Number(article.n_weight ?? 1).toFixed(2)}</dd>
+            {article.sample_size != null && (
+              <div className="editorial text-[9px] tracking-[0.18em] text-leaf/70 mt-0.5">N = {article.sample_size}</div>
+            )}
           </div>
           <div>
             <dt className="editorial text-[9px] tracking-[0.25em] text-leaf">{t("detail.recency_weight")}</dt>
-            <dd className="mt-1 font-mono text-[14px] text-cream">×{article.recency_weight}</dd>
+            <dd className="mt-1 font-mono text-[14px] text-cream">×{Number(article.recency_weight).toFixed(2)}</dd>
+          </div>
+          <div>
+            <dt className="editorial text-[9px] tracking-[0.25em] text-leaf">{t("detail.oa_bonus")}</dt>
+            <dd className="mt-1 font-mono text-[14px] text-cream">×{Number(article.oa_bonus ?? 1).toFixed(2)}</dd>
+            {article.pmc_id && (
+              <a href={`https://www.ncbi.nlm.nih.gov/pmc/articles/${article.pmc_id}/`} target="_blank" rel="noopener noreferrer"
+                 className="editorial text-[9px] tracking-[0.18em] text-leaf/70 hover:text-brass mt-0.5 inline-block">
+                {article.pmc_id}
+              </a>
+            )}
           </div>
           <div>
             <dt className="editorial text-[9px] tracking-[0.25em] text-leaf">{t("detail.final_score")}</dt>
-            <dd className="mt-1 font-serif italic font-bold text-blood text-[24px]">{Math.round(article.score)}</dd>
+            <dd className="mt-1 font-serif italic font-bold text-blood text-[24px] leading-none">{Math.round(article.score)}</dd>
+            <div className="editorial text-[9px] tracking-[0.18em] text-leaf/70 mt-1">T{article.tier ?? "—"}</div>
           </div>
         </dl>
+        <div className="mt-4 pt-3 border-t border-brass/30 editorial text-[10px] tracking-[0.18em] text-leaf/80 font-mono">
+          score = JIF × OCEBM × Recency × N × OA × 100
+        </div>
       </section>
 
       {article.mesh_headings.length > 0 && (

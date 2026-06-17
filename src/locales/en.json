@@ -57,8 +57,12 @@
     "keywords": "Author keywords",
     "scoring_breakdown": "Scoring breakdown",
     "tier_label": "Journal tier",
-    "type_weight": "Article-type weight",
-    "recency_weight": "Recency weight",
+    "type_weight": "Article type",
+    "jif_weight": "Journal impact",
+    "ocebm_weight": "Evidence level",
+    "n_weight": "Sample size",
+    "oa_bonus": "Open access",
+    "recency_weight": "Recency",
     "final_score": "Final score"
   },
   "state": {

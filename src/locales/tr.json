@@ -57,8 +57,12 @@
     "keywords": "Yazar anahtar kelimeleri",
     "scoring_breakdown": "Skor dökümü",
     "tier_label": "Dergi katmanı",
-    "type_weight": "Makale tipi ağırlığı",
-    "recency_weight": "Güncellik ağırlığı",
+    "type_weight": "Makale tipi",
+    "jif_weight": "Dergi etki faktörü",
+    "ocebm_weight": "Kanıt düzeyi",
+    "n_weight": "Örneklem büyüklüğü",
+    "oa_bonus": "Açık erişim",
+    "recency_weight": "Güncellik",
     "final_score": "Toplam skor"
   },
   "state": {
