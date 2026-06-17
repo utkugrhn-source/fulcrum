@@ -43,6 +43,55 @@ export function relativeDate(iso: string | null, locale: "en" | "tr"): string {
   return locale === "tr" ? `${years} yıl önce` : `${years}y ago`;
 }
 
+/**
+ * Decode HTML entities found in PubMed abstracts.
+ * PubMed XML preserves numeric character references like &#x2009; (thin space),
+ * &#x003C; (<), &#x2265; (≥), etc., which React renders as literal text.
+ * Also handles a handful of named entities.
+ */
+const NAMED_ENTITIES: Record<string, string> = {
+  "&amp;": "&",
+  "&lt;": "<",
+  "&gt;": ">",
+  "&quot;": "\"",
+  "&apos;": "'",
+  "&nbsp;": " ",
+  "&ndash;": "–",
+  "&mdash;": "—",
+  "&hellip;": "…",
+  "&deg;": "°",
+  "&plusmn;": "±",
+  "&times;": "×",
+  "&middot;": "·",
+  "&alpha;": "α",
+  "&beta;": "β",
+  "&gamma;": "γ",
+  "&delta;": "δ",
+  "&mu;": "μ",
+  "&omega;": "ω",
+  "&le;": "≤",
+  "&ge;": "≥",
+  "&ne;": "≠",
+  "&minus;": "−",
+};
+
+export function decodeEntities(text: string | null | undefined): string {
+  if (!text) return "";
+  return text
+    // hex numeric: &#x2009; &#x003C; etc.
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => {
+      const cp = parseInt(hex, 16);
+      return Number.isFinite(cp) && cp > 0 ? String.fromCodePoint(cp) : "";
+    })
+    // decimal numeric: &#8201; etc.
+    .replace(/&#(\d+);/g, (_, dec) => {
+      const cp = parseInt(dec, 10);
+      return Number.isFinite(cp) && cp > 0 ? String.fromCodePoint(cp) : "";
+    })
+    // named entities
+    .replace(/&[a-zA-Z]+;/g, (m) => NAMED_ENTITIES[m] ?? m);
+}
+
 export function articleTypeLabel(types: string[]): string | null {
   const priority = [
     "Randomized Controlled Trial",

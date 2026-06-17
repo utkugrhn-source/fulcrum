@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import type { Article } from "@/types";
-import { articleTypeLabel, formatAuthors, relativeDate } from "@/lib/format";
+import { articleTypeLabel, decodeEntities, formatAuthors, relativeDate } from "@/lib/format";
 
 interface Props { article: Article; rank: number }
 
@@ -53,7 +53,7 @@ export function ArticleCard({ article, rank }: Props) {
 
           {/* Title */}
           <h3 className="body-serif font-semibold text-[15px] sm:text-[16.5px] leading-tight text-cream mb-1.5 -tracking-[0.005em]">
-            {article.title}
+            {decodeEntities(article.title)}
           </h3>
 
           {/* Authors */}

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import type { Article, OcebmLevel } from "@/types";
-import { articleTypeLabel, formatAuthors, relativeDate } from "@/lib/format";
+import { articleTypeLabel, decodeEntities, formatAuthors, relativeDate } from "@/lib/format";
 
 interface Props { articles: Article[] }
 
@@ -57,7 +57,7 @@ function FeatureCard({ article, pos }: { article: Article; pos: Position }) {
   const type = articleTypeLabel(article.publication_types);
   const ocebm = ocebmLabel(article.ocebm_level);
   const note = article.abstract
-    ? article.abstract.replace(/\s+/g, " ").trim().slice(0, 220) + "…"
+    ? decodeEntities(article.abstract).replace(/\s+/g, " ").trim().slice(0, 220) + "…"
     : formatAuthors(article, 6);
 
   return (
@@ -87,7 +87,7 @@ function FeatureCard({ article, pos }: { article: Article; pos: Position }) {
             )}
           </div>
           <h2 className="body-serif font-bold text-[20px] sm:text-[23px] leading-snug text-navy dark:text-cream mb-2 -tracking-[0.01em] group-hover:text-blood transition-colors">
-            {article.title}
+            {decodeEntities(article.title)}
           </h2>
           <p className="body-serif italic text-[13px] text-ink dark:text-cream/70 leading-relaxed max-w-[460px] line-clamp-3">
             {note}
@@ -132,7 +132,7 @@ function MiniCard({ article, pos }: { article: Article; pos: Position }) {
           </span>
         </div>
         <h3 className="body-serif font-semibold text-[14.5px] leading-snug text-cream group-hover:text-brass transition-colors line-clamp-2">
-          {article.title}
+          {decodeEntities(article.title)}
         </h3>
         <div className="flex items-center gap-2 mt-1.5 editorial text-[10px] tracking-[0.1em] text-cream/55">
           <span className="text-leaf truncate max-w-[160px]">

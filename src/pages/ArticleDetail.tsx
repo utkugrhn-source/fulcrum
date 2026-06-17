@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { getArticle } from "@/lib/api";
 import type { Article } from "@/types";
-import { articleTypeLabel, formatAuthors, pubmedUrl } from "@/lib/format";
+import { articleTypeLabel, decodeEntities, formatAuthors, pubmedUrl } from "@/lib/format";
 
 export function ArticleDetail() {
   const { pmid = "" } = useParams();
@@ -69,7 +69,7 @@ export function ArticleDetail() {
             )}
           </div>
           <h1 className="display text-[28px] sm:text-[36px] leading-tight text-navy dark:text-cream">
-            {article.title}
+            {decodeEntities(article.title)}
           </h1>
           <div className="mt-3 body-serif italic text-[14px] text-ink dark:text-cream/80">
             {formatAuthors(article, 8)}
@@ -97,7 +97,7 @@ export function ArticleDetail() {
         <h2 className="editorial text-[11px] tracking-[0.3em] text-blood mb-3">{t("detail.abstract")}</h2>
         {article.abstract ? (
           <div className="body-serif whitespace-pre-line text-ink dark:text-cream/80 leading-relaxed text-[14.5px]">
-            {article.abstract}
+            {decodeEntities(article.abstract)}
           </div>
         ) : (
           <div className="body-serif italic text-ink-2 dark:text-leaf">{t("card.no_abstract")}</div>
