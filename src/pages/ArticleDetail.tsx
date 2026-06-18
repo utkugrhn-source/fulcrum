@@ -6,6 +6,7 @@ import { getArticle } from "@/lib/api";
 import type { Article } from "@/types";
 import { articleTypeLabel, decodeEntities, formatAuthors, pubmedUrl } from "@/lib/format";
 import { ShareBar } from "@/components/ShareBar";
+import { BookmarkButton } from "@/components/BookmarkButton";
 
 export function ArticleDetail() {
   const { pmid = "" } = useParams();
@@ -91,7 +92,8 @@ export function ArticleDetail() {
               </a>
             )}
           </div>
-          <div className="mt-3">
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <BookmarkButton pmid={article.pmid} />
             <ShareBar article={article} />
           </div>
         </div>

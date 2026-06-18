@@ -52,6 +52,13 @@
     "copy_citation": "ATIF",
     "copied": "✓ KOPYALANDI"
   },
+  "save": {
+    "save": "KAYDET",
+    "saved": "✓ KAYITLI",
+    "add": "Okuma listesine ekle",
+    "remove": "Listeden çıkar"
+  },
+  "nav_reading_list": "OKUMA LİSTESİ",
   "detail": {
     "back": "Bugüne dön",
     "abstract": "Özet",

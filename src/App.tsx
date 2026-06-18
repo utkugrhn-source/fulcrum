@@ -6,6 +6,7 @@ import { ArticleDetail } from "./pages/ArticleDetail";
 import { Methodology } from "./pages/Methodology";
 import { About } from "./pages/About";
 import { SubspecialtyHome } from "./pages/SubspecialtyHome";
+import { ReadingList } from "./pages/ReadingList";
 
 function Footer() {
   const { t } = useTranslation();
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/a/:pmid" element={<ArticleDetail />} />
           <Route path="/sub/:slug" element={<SubspecialtyHome />} />
+          <Route path="/reading-list" element={<ReadingList />} />
           <Route path="/scoring" element={<Methodology />} />
           <Route path="/about" element={<About />} />
         </Routes>

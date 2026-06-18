@@ -1,11 +1,14 @@
 import { Link, NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Bookmark } from "lucide-react";
 import { LanguageToggle } from "./LanguageToggle";
 import { ThemeToggle } from "./ThemeToggle";
 import { BrandMark } from "./BrandMark";
+import { useReadingList } from "@/hooks/useReadingList";
 
 export function Header() {
   const { t } = useTranslation();
+  const { count } = useReadingList();
   const navClass = ({ isActive }: { isActive: boolean }) =>
     `editorial text-[11px] tracking-[0.22em] transition-colors ${
       isActive
@@ -31,6 +34,23 @@ export function Header() {
           <NavLink to="/about" className={navClass}>{t("nav.about")}</NavLink>
         </nav>
         <div className="flex items-center gap-3">
+          <NavLink
+            to="/reading-list"
+            className={({ isActive }) =>
+              `inline-flex items-center gap-1 editorial text-[11px] tracking-[0.18em] transition-colors ${
+                isActive
+                  ? "text-blood"
+                  : count > 0
+                    ? "text-brass hover:text-blood"
+                    : "text-ink-2 dark:text-leaf hover:text-navy dark:hover:text-cream"
+              }`
+            }
+            title={t("nav_reading_list")}
+            aria-label={t("nav_reading_list")}
+          >
+            <Bookmark size={14} fill={count > 0 ? "currentColor" : "none"} />
+            {count > 0 && <span className="font-mono text-[11px]">{count}</span>}
+          </NavLink>
           <LanguageToggle />
           <ThemeToggle />
         </div>

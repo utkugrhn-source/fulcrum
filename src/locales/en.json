@@ -52,6 +52,13 @@
     "copy_citation": "CITE",
     "copied": "✓ COPIED"
   },
+  "save": {
+    "save": "SAVE",
+    "saved": "✓ SAVED",
+    "add": "Add to reading list",
+    "remove": "Remove from list"
+  },
+  "nav_reading_list": "READING LIST",
   "detail": {
     "back": "Back to today",
     "abstract": "Abstract",
