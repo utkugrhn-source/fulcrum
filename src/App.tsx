@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Header } from "./components/Header";
 import { Home } from "./pages/Home";
 import { ArticleDetail } from "./pages/ArticleDetail";
+import { Methodology } from "./pages/Methodology";
+import { About } from "./pages/About";
 
 function Footer() {
   const { t } = useTranslation();
@@ -33,6 +35,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/a/:pmid" element={<ArticleDetail />} />
+          <Route path="/scoring" element={<Methodology />} />
+          <Route path="/about" element={<About />} />
         </Routes>
       </main>
       <Footer />
