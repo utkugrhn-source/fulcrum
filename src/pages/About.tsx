@@ -121,9 +121,9 @@ export function About() {
         </p>
         <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
           {SUBSPECIALTIES.map((s) => (
-            <span key={s.slug} className="pill text-[11.5px] uppercase">
+            <Link key={s.slug} to={`/sub/${s.slug}`} className="pill text-[11.5px] uppercase hover:bg-brass hover:text-cream transition-colors">
               {lang === "tr" ? s.tr : s.en}
-            </span>
+            </Link>
           ))}
         </div>
       </div>
