@@ -5,6 +5,7 @@ import { ArrowLeft, ExternalLink } from "lucide-react";
 import { getArticle } from "@/lib/api";
 import type { Article } from "@/types";
 import { articleTypeLabel, decodeEntities, formatAuthors, pubmedUrl } from "@/lib/format";
+import { ShareBar } from "@/components/ShareBar";
 
 export function ArticleDetail() {
   const { pmid = "" } = useParams();
@@ -89,6 +90,9 @@ export function ArticleDetail() {
                 DOI <ExternalLink size={11} />
               </a>
             )}
+          </div>
+          <div className="mt-3">
+            <ShareBar article={article} />
           </div>
         </div>
       </header>

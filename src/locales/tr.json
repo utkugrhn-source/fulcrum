@@ -46,6 +46,12 @@
     "open_doi": "DOI",
     "no_abstract": "Özet mevcut değil."
   },
+  "share": {
+    "share": "PAYLAŞ",
+    "copy_link": "BAĞLANTI",
+    "copy_citation": "ATIF",
+    "copied": "✓ KOPYALANDI"
+  },
   "detail": {
     "back": "Bugüne dön",
     "abstract": "Özet",

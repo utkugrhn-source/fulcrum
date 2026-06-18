@@ -46,6 +46,12 @@
     "open_doi": "DOI",
     "no_abstract": "No abstract available."
   },
+  "share": {
+    "share": "SHARE",
+    "copy_link": "LINK",
+    "copy_citation": "CITE",
+    "copied": "✓ COPIED"
+  },
   "detail": {
     "back": "Back to today",
     "abstract": "Abstract",
