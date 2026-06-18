@@ -17,5 +17,5 @@
     "resolveJsonModule": true,
     "jsx": "react-jsx"
   },
-  "include": ["vite.config.ts", "api/**/*.ts", "api/**/*.tsx", "scripts/**/*.ts"]
+  "include": ["vite.config.ts", "api/**/*.ts", "api/**/*.tsx", "middleware.ts", "scripts/**/*.ts"]
 }
