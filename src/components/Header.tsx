@@ -17,13 +17,13 @@ export function Header() {
     }`;
 
   return (
-    <header className="border-b border-brass bg-cream dark:bg-navy sticky top-0 z-30">
-      <div className="container-prose flex items-center justify-between h-[68px]">
-        <Link to="/" className="flex items-center gap-3 group" aria-label="Fulcrum">
-          <BrandMark size={42} className="shrink-0" />
+    <header className="border-b border-divider/40 bg-cream/85 dark:bg-navy/80 backdrop-blur-xl sticky top-0 z-30">
+      <div className="container-prose flex items-center justify-between h-[60px]">
+        <Link to="/" className="flex items-center gap-2.5 group" aria-label="Fulcrum">
+          <BrandMark size={32} className="shrink-0" />
           <span
-            className="text-[28px] sm:text-[32px] leading-none tracking-[-0.04em] font-display text-navy dark:text-cream"
-            style={{ fontStyle: "italic", fontWeight: 700 }}
+            className="text-[22px] sm:text-[24px] leading-none tracking-[-0.025em] font-sans text-ink dark:text-cream"
+            style={{ fontWeight: 700 }}
           >
             <span className="text-blood">F</span>ulcrum
           </span>
