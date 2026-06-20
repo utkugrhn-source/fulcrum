@@ -22,7 +22,8 @@
   "nav": {
     "home": "Bugün",
     "about": "Hakkında",
-    "scoring": "Skor"
+    "scoring": "Skor",
+    "archive": "Arşiv"
   },
   "filters": {
     "all_subspecialties": "Tümü",

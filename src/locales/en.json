@@ -22,7 +22,8 @@
   "nav": {
     "home": "Today",
     "about": "About",
-    "scoring": "Scoring"
+    "scoring": "Scoring",
+    "archive": "Archive"
   },
   "filters": {
     "all_subspecialties": "All",

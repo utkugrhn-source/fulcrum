@@ -30,6 +30,7 @@ export function Header() {
         </Link>
         <nav className="hidden sm:flex items-center gap-5">
           <NavLink to="/" end className={navClass}>{t("nav.home")}</NavLink>
+          <NavLink to="/archive" className={navClass}>{t("nav.archive")}</NavLink>
           <NavLink to="/scoring" className={navClass}>{t("nav.scoring")}</NavLink>
           <NavLink to="/about" className={navClass}>{t("nav.about")}</NavLink>
         </nav>
