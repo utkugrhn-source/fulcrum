@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Download } from "lucide-react";
 import { useReadingList } from "@/hooks/useReadingList";
 import { getArticle } from "@/lib/api";
 import type { Article } from "@/types";
 import { ArticleCard } from "@/components/ArticleCard";
 import { CardSkeleton } from "@/components/Skeleton";
 import { EmptyState } from "@/components/EmptyState";
+import {
+  toBibtexFile, toRisFile, toCsvFile,
+  downloadText, exportFilename,
+} from "@/lib/citation";
 
 export function ReadingList() {
   const { t, i18n } = useTranslation();
@@ -76,6 +80,39 @@ export function ReadingList() {
             </button>
           )}
         </div>
+
+        {/* Export bar */}
+        {articles.length > 0 && (
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <span className="editorial text-[11px] tracking-[0.18em] text-ink-2 dark:text-leaf">
+              {lang === "tr" ? "DIŞA AKTAR" : "EXPORT"}
+            </span>
+            <button
+              type="button"
+              onClick={() => downloadText(exportFilename("fulcrum-reading-list", "bib"), toBibtexFile(articles), "application/x-bibtex")}
+              className="inline-flex items-center gap-1.5 editorial text-[11px] tracking-[0.15em] text-brass hover:text-cream border border-brass/40 hover:border-brass hover:bg-brass rounded-sm px-2.5 py-1 transition-colors"
+            >
+              <Download size={12} />
+              BIBTEX
+            </button>
+            <button
+              type="button"
+              onClick={() => downloadText(exportFilename("fulcrum-reading-list", "ris"), toRisFile(articles), "application/x-research-info-systems")}
+              className="inline-flex items-center gap-1.5 editorial text-[11px] tracking-[0.15em] text-brass hover:text-cream border border-brass/40 hover:border-brass hover:bg-brass rounded-sm px-2.5 py-1 transition-colors"
+            >
+              <Download size={12} />
+              RIS
+            </button>
+            <button
+              type="button"
+              onClick={() => downloadText(exportFilename("fulcrum-reading-list", "csv"), toCsvFile(articles), "text/csv")}
+              className="inline-flex items-center gap-1.5 editorial text-[11px] tracking-[0.15em] text-brass hover:text-cream border border-brass/40 hover:border-brass hover:bg-brass rounded-sm px-2.5 py-1 transition-colors"
+            >
+              <Download size={12} />
+              CSV
+            </button>
+          </div>
+        )}
         <div className="w-[72px] border-t-2 border-brass my-4" />
         <p className="body-serif text-[14px] sm:text-[15px] text-ink dark:text-cream/80 max-w-xl leading-relaxed">
           {lang === "tr"
