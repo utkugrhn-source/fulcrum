@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { listSubspecialties } from "@/lib/api";
 import { supabaseConfigured } from "@/lib/supabase";
 import type { Subspecialty } from "@/types";
@@ -88,11 +89,15 @@ export function Home() {
         <p className="body-serif text-[14px] sm:text-[15px] text-ink dark:text-cream/80 max-w-xl leading-relaxed">
           {t("app.subtitle")}
         </p>
-        <div className="sm:absolute sm:top-10 sm:right-7 mt-3 sm:mt-0 editorial text-[10.5px] sm:text-[11px] tracking-[0.25em] text-ink dark:text-leaf sm:text-right leading-relaxed">
+        <Link
+          to={`/issue/${new Date().toISOString().slice(0, 10)}`}
+          className="sm:absolute sm:top-10 sm:right-7 mt-3 sm:mt-0 editorial text-[10.5px] sm:text-[11px] tracking-[0.25em] text-ink dark:text-leaf sm:text-right leading-relaxed hover:text-brass transition-colors block"
+          title={lang === "tr" ? "Bu sayıyı arşivde gör" : "View this issue in archive"}
+        >
           {t("hero.folioPrefix")} {folio.issueNo}
           <br />
           {folio.dateLabel}
-        </div>
+        </Link>
       </section>
 
       {/* Podium — top 3 */}
