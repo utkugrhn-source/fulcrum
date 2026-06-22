@@ -125,16 +125,26 @@ function buildMeta(pmid: string, meta: ArticleMeta, origin: string): string {
 }
 
 export default async function middleware(req: Request): Promise<Response | undefined> {
+  const url = new URL(req.url);
   const ua = req.headers.get("user-agent") ?? "";
   const isBot = BOT_REGEX.test(ua);
-  if (!isBot) return;
+  const forced = url.searchParams.get("_og") === "1"; // dev / debug escape hatch
+  if (!isBot && !forced) return;
 
-  const url = new URL(req.url);
   const pmid = url.pathname.split("/a/")[1]?.split("/")[0];
   if (!pmid || !/^\d+$/.test(pmid)) return;
 
   const meta = await fetchArticleMeta(pmid);
-  if (!meta) return;
+  if (!meta) {
+    // Surface the failure when we're force-debugging so it's visible.
+    if (forced) {
+      return new Response(`<!doctype html><html><head><title>middleware/no-meta</title></head><body>middleware ran for pmid=${pmid} but fetchArticleMeta returned null. Likely SUPABASE_URL / anon key not exposed to the Edge runtime.</body></html>`, {
+        status: 200,
+        headers: { "Content-Type": "text/html; charset=utf-8", "X-Fulcrum-MW": "no-meta" },
+      });
+    }
+    return;
+  }
 
   // Pull the static SPA shell and inject our per-article meta tags.
   const htmlRes = await fetch(`${url.origin}/index.html`, {
@@ -154,6 +164,7 @@ export default async function middleware(req: Request): Promise<Response | undef
     headers: {
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
+      "X-Fulcrum-MW": forced ? "forced" : "bot",
     },
   });
 }
