@@ -97,7 +97,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           now,
         });
         return {
+          // Pass-through identity + NOT NULL fields so the upsert's INSERT path
+          // doesn't fail validation. These won't actually change on conflict.
           pmid: a.pmid,
+          title: a.title,
+          journal_title_raw: a.journal_title_raw,
+          // Updated scoring + classification
           journal_id: journal?.id ?? null,
           sample_size: n ?? null,
           tier: s.tier,
@@ -115,13 +120,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         };
       });
 
-      const { error: uErr } = await sb
-        .from("articles")
-        .upsert(updates, { onConflict: "pmid" });
-      if (uErr) {
-        report.upsert_errors.push(`page=${offset}: ${uErr.message}`);
-      } else {
-        report.rescored += updates.length;
+      // UPDATE-only semantics via per-row .update().eq() — we don't have to
+      // ship NOT NULL columns like an upsert would require. Run the chunk in
+      // parallel so each batch is fast.
+      const results = await Promise.all(updates.map(async (u) => {
+        const { pmid, ...patch } = u;
+        const { error: uErr } = await sb
+          .from("articles")
+          .update(patch)
+          .eq("pmid", pmid);
+        return uErr ? uErr.message : null;
+      }));
+      const errs = results.filter((m): m is string => m !== null);
+      const ok = results.length - errs.length;
+      report.rescored += ok;
+      if (errs.length > 0) {
+        report.upsert_errors.push(`page=${offset}: ${errs.length}/${results.length} failed — first error: ${errs[0]}`);
       }
     }
 
