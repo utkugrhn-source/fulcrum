@@ -126,25 +126,18 @@ function buildMeta(pmid: string, meta: ArticleMeta, origin: string): string {
 
 export default async function middleware(req: Request): Promise<Response | undefined> {
   const url = new URL(req.url);
-  const ua = req.headers.get("user-agent") ?? "";
-  const isBot = BOT_REGEX.test(ua);
-  const forced = url.searchParams.get("_og") === "1"; // dev / debug escape hatch
-  if (!isBot && !forced) return;
-
   const pmid = url.pathname.split("/a/")[1]?.split("/")[0];
   if (!pmid || !/^\d+$/.test(pmid)) return;
 
+  // Always inject per-article meta. Bot UA detection was too brittle —
+  // opengraph.xyz, LinkedIn, Slack and a long tail use their own UAs.
+  // Edge cache (s-maxage=3600) keeps the cost negligible after the first hit.
+  // BOT_REGEX is no longer in the request path but kept around in case we
+  // want a different policy per crawler later.
+  void BOT_REGEX;
+
   const meta = await fetchArticleMeta(pmid);
-  if (!meta) {
-    // Surface the failure when we're force-debugging so it's visible.
-    if (forced) {
-      return new Response(`<!doctype html><html><head><title>middleware/no-meta</title></head><body>middleware ran for pmid=${pmid} but fetchArticleMeta returned null. Likely SUPABASE_URL / anon key not exposed to the Edge runtime.</body></html>`, {
-        status: 200,
-        headers: { "Content-Type": "text/html; charset=utf-8", "X-Fulcrum-MW": "no-meta" },
-      });
-    }
-    return;
-  }
+  if (!meta) return; // fall through to the SPA — bad URL or DB hiccup
 
   // Pull the static SPA shell and inject our per-article meta tags.
   const htmlRes = await fetch(`${url.origin}/index.html`, {
@@ -164,7 +157,7 @@ export default async function middleware(req: Request): Promise<Response | undef
     headers: {
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
-      "X-Fulcrum-MW": forced ? "forced" : "bot",
+      "X-Fulcrum-MW": "always",
     },
   });
 }
