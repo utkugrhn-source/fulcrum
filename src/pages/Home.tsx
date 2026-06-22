@@ -1,7 +1,9 @@
 import { useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { listSubspecialties } from "@/lib/api";
+import { SubscribeForm } from "@/components/SubscribeForm";
+import { Check, AlertCircle } from "lucide-react";
 import { supabaseConfigured } from "@/lib/supabase";
 import type { Subspecialty } from "@/types";
 import { useArticles } from "@/hooks/useArticles";
@@ -36,6 +38,9 @@ function todayFolio(lang: "tr" | "en"): { issueNo: number; dateLabel: string } {
 export function Home() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith("tr") ? "tr" : "en";
+  const [params] = useSearchParams();
+  const subscribeFlag = params.get("subscribe");
+  const unsubscribeFlag = params.get("unsubscribe");
   const [subs, setSubs] = useState<Subspecialty[]>([]);
   const [selectedSubs, setSelectedSubs] = useState<string[]>([]);
   const [selectedTiers, setSelectedTiers] = useState<number[]>([]);
@@ -99,6 +104,28 @@ export function Home() {
           {folio.dateLabel}
         </Link>
       </section>
+
+      {/* Subscribe banner (confirmation / unsubscribe feedback or static signup) */}
+      {(subscribeFlag === "confirmed" || subscribeFlag === "invalid" || unsubscribeFlag === "done" || unsubscribeFlag === "invalid") ? (
+        <section className="container-prose pt-5">
+          <div className={`flex items-start gap-2 p-4 rounded-xl border ${
+            subscribeFlag === "confirmed" || unsubscribeFlag === "done"
+              ? "bg-cream-2 dark:bg-navy-2 border-success/40"
+              : "bg-cream-2 dark:bg-navy-2 border-blood/40"
+          }`}>
+            {(subscribeFlag === "confirmed" || unsubscribeFlag === "done")
+              ? <Check size={18} className="text-success shrink-0 mt-0.5" />
+              : <AlertCircle size={18} className="text-blood shrink-0 mt-0.5" />
+            }
+            <span className="text-base text-ink dark:text-cream/90">
+              {subscribeFlag === "confirmed"   && t("subscribe.confirmed")}
+              {subscribeFlag === "invalid"     && t("subscribe.invalid")}
+              {unsubscribeFlag === "done"      && t("subscribe.unsubscribed")}
+              {unsubscribeFlag === "invalid"   && t("subscribe.invalid")}
+            </span>
+          </div>
+        </section>
+      ) : null}
 
       {/* Podium — top 3 */}
       {!loading && podiumArticles.length > 0 && <PodiumTop3 articles={podiumArticles} />}
@@ -185,6 +212,22 @@ export function Home() {
             ))}
           </ul>
         )}
+      </section>
+
+      {/* Subscribe section */}
+      <section className="container-prose pb-12">
+        <div className="rounded-2xl bg-cream-2 dark:bg-navy-2 border border-divider/30 p-5 sm:p-7">
+          <div className="editorial text-[11px] tracking-[0.3em] text-blood font-medium mb-2">
+            {lang === "tr" ? "GÜNLÜK ÖZET" : "DAILY DIGEST"}
+          </div>
+          <h2 className="display text-[26px] sm:text-[32px] leading-tight text-navy dark:text-cream mb-2">
+            {t("subscribe.title")}
+          </h2>
+          <p className="body-serif text-[15px] text-ink dark:text-cream/80 max-w-2xl leading-relaxed mb-4">
+            {t("subscribe.lead")}
+          </p>
+          <SubscribeForm />
+        </div>
       </section>
     </div>
   );

@@ -1,16 +1,18 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "crons": [
-    {
-      "path": "/api/cron-daily",
-      "schedule": "0 6 * * *"
-    }
+    { "path": "/api/cron-daily",  "schedule": "0 6 * * *" },
+    { "path": "/api/cron-digest", "schedule": "30 6 * * *" }
   ],
   "functions": {
-    "api/ingest.ts": { "maxDuration": 60 },
-    "api/score.ts": { "maxDuration": 60 },
-    "api/cron-daily.ts": { "maxDuration": 60 },
-    "api/articles.ts": { "maxDuration": 10 }
+    "api/ingest.ts":       { "maxDuration": 60 },
+    "api/score.ts":        { "maxDuration": 60 },
+    "api/cron-daily.ts":   { "maxDuration": 60 },
+    "api/cron-digest.ts":  { "maxDuration": 60 },
+    "api/articles.ts":     { "maxDuration": 10 },
+    "api/subscribe.ts":    { "maxDuration": 10 },
+    "api/confirm.ts":      { "maxDuration": 10 },
+    "api/unsubscribe.ts":  { "maxDuration": 10 }
   },
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }

@@ -59,6 +59,14 @@
     "add": "Okuma listesine ekle",
     "remove": "Listeden çıkar"
   },
+  "subscribe": {
+    "title": "Günlük özet, gelen kutuna",
+    "lead": "Her sabah üst 5 ortopedi makalesi — JIF, OCEBM düzeyi, güncellik ve örneklem büyüklüğüyle sıralanmış.",
+    "notice": "Çifte onay gerekir. E-postan üçüncü tarafla paylaşılmaz; tek tıkla istediğinde aboneliği iptal edebilirsin.",
+    "confirmed": "Aboneliğin onaylandı. Yarın sabahki özet gelen kutunda.",
+    "unsubscribed": "Aboneliğin iptal edildi.",
+    "invalid": "Bağlantı geçersiz ya da süresi dolmuş."
+  },
   "nav_reading_list": "OKUMA LİSTESİ",
   "detail": {
     "back": "Bugüne dön",

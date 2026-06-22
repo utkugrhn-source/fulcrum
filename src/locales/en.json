@@ -59,6 +59,14 @@
     "add": "Add to reading list",
     "remove": "Remove from list"
   },
+  "subscribe": {
+    "title": "The digest, in your inbox",
+    "lead": "Top 5 orthopaedic papers every morning — ranked by JIF, OCEBM evidence level, recency, and sample size.",
+    "notice": "Double opt-in. Your email isn't shared. One-click unsubscribe in every issue.",
+    "confirmed": "You're subscribed. Tomorrow's digest will arrive in your inbox.",
+    "unsubscribed": "You've been unsubscribed.",
+    "invalid": "Link invalid or expired."
+  },
   "nav_reading_list": "READING LIST",
   "detail": {
     "back": "Back to today",
