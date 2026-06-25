@@ -1,3 +1,12 @@
+# Fulcrum — daily orthopaedic literature, ranked.
+# https://fulcrum.cyprusorthopaedics.com
+
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /reading-list
+
+# Crawl politely — site is a daily digest, not a high-frequency feed.
+Crawl-delay: 5
+
 Sitemap: https://fulcrum.cyprusorthopaedics.com/sitemap.xml

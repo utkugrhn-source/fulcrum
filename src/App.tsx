@@ -9,6 +9,7 @@ import { SubspecialtyHome } from "./pages/SubspecialtyHome";
 import { ReadingList } from "./pages/ReadingList";
 import { Archive } from "./pages/Archive";
 import { Issue } from "./pages/Issue";
+import { NotFound } from "./pages/NotFound";
 
 function Footer() {
   const { t } = useTranslation();
@@ -45,6 +46,7 @@ export default function App() {
           <Route path="/issue/:date" element={<Issue />} />
           <Route path="/scoring" element={<Methodology />} />
           <Route path="/about" element={<About />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer />

@@ -79,6 +79,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const t0 = Date.now();
   const date = todayIssueDate();
+  const isPreview = String(req.query.preview ?? "") === "1";
+  const previewLang: "tr" | "en" = req.query.lang === "tr" ? "tr" : "en";
   const report: Report = { ok: true, attempted: 0, sent: 0, errors: [], articles: 0, date, duration_ms: 0 };
 
   try {
@@ -115,6 +117,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const issueNo = issueNumberForDate(date);
+
+    // Preview mode: render the digest HTML and ship it back, no DB writes, no mail send.
+    if (isPreview) {
+      const dateLabel = formatDate(date, previewLang);
+      const digestArticles: DigestArticle[] = (articles as ArticleRow[]).map((a) => ({
+        pmid: a.pmid,
+        title: decodeEntities(a.title),
+        journal: a.journal_title ?? a.journal_title_raw,
+        score: Math.round(a.score),
+        tier: a.tier,
+        subspecialty_en: a.subspecialty_name_en,
+        subspecialty_tr: a.subspecialty_name_tr,
+        ocebm_level: a.ocebm_level,
+        url: `https://fulcrum.cyprusorthopaedics.com/a/${a.pmid}`,
+      }));
+      const unsubscribeUrl = `https://fulcrum.cyprusorthopaedics.com/api/unsubscribe?token=PREVIEW`;
+      const mail = digestEmail({ articles: digestArticles, dateLabel, issueNo, unsubscribeUrl, lang: previewLang });
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.setHeader("Cache-Control", "no-store");
+      res.status(200).send(mail.html);
+      return;
+    }
 
     // Confirmed subscribers
     const { data: subs, error: sErr } = await sb
